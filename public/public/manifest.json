@@ -9,15 +9,15 @@
   "theme_color": "#00ff88",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%230a0e17'/><circle cx='96' cy='96' r='50' fill='none' stroke='%2300ff88' stroke-width='6'/><path d='M96 56v40' stroke='%2300ff88' stroke-width='6' stroke-linecap='round'/><text x='96' y='170' text-anchor='middle' fill='%2300ff88' font-family='sans-serif' font-size='22' font-weight='bold'>LP</text></svg>",
+      "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%230a0e17'/><circle cx='256' cy='240' r='100' fill='none' stroke='%2300ff88' stroke-width='12'/><path d='M256 160v80' stroke='%2300ff88' stroke-width='12' stroke-linecap='round'/><text x='256' y='430' text-anchor='middle' fill='%2300ff88' font-family='sans-serif' font-size='60' font-weight='bold'>LP ALGO</text></svg>",
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
