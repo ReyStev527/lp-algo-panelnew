@@ -204,18 +204,37 @@ input:focus,select:focus{border-color:var(--g)}
 
     <!-- SETTINGS -->
     <div id="dt-settings" style="display:none">
-      <div class="card"><div class="title">MAIN ENTRY</div>
+      <div class="card"><div class="title">MONEY MANAGEMENT</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Main Lot</span><input type="number" id="st-ml" step="0.01" value="0.02" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Cut Loss ($)</span><input type="number" id="st-cl" step="10" value="0" style="width:75px;text-align:right"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Grid Pips</span><input type="number" id="st-gp" step="0.5" value="9.0" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Cut Loss ($)</span><input type="number" id="st-cl" step="10" value="0" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Entry Per Step</span><input type="number" id="st-eps" step="1" min="1" value="8" style="width:75px;text-align:right"></div>
+      </div>
+      <div class="card"><div class="title">NEWS FILTER</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">News Filter</span><select id="st-nf" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Stop Sebelum (menit)</span><input type="number" id="st-nb" step="1" min="0" value="15" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Stop Sesudah (menit)</span><input type="number" id="st-na" step="1" min="0" value="15" style="width:75px;text-align:right"></div>
+      </div>
+      <div class="card"><div class="title">AUTO-RESTART</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Auto-Restart</span><select id="st-ar" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="0">OFF</option><option value="1">ON</option></select></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Cooldown (menit)</span><input type="number" id="st-cd" step="1" min="1" value="2" style="width:75px;text-align:right"></div>
       </div>
       <div class="card"><div class="title">S2 MODULE</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S2 Lot</span><input type="number" id="st-rl" step="0.01" value="0.02" style="width:75px;text-align:right"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">S2 Max Entry</span><input type="number" id="st-rm" step="1" value="70" style="width:75px;text-align:right"></div>
       </div>
       <div class="card"><div class="title">S3 MODULE</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 Module</span><select id="st-mron" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 Lot</span><input type="number" id="st-mrl" step="0.01" value="0.10" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 Lot Step</span><input type="number" id="st-mrls" step="0.01" value="0.01" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 Grid Pips</span><input type="number" id="st-mrgp" step="0.5" value="15.0" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 TP1 Pips</span><input type="number" id="st-mrtp1" step="1" value="30" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 TP Multi Pips</span><input type="number" id="st-mrtpm" step="0.5" value="3.0" style="width:75px;text-align:right"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">S3 Max Entry</span><input type="number" id="st-mrm" step="1" value="15" style="width:75px;text-align:right"></div>
+      </div>
+      <div class="card"><div class="title">SESSION TIME (WIB)</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">EA OFF jam (WIB)</span><input type="number" id="st-offh" step="1" min="0" max="23" value="3" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">EA ON jam (WIB)</span><input type="number" id="st-onh" step="1" min="0" max="23" value="6" style="width:75px;text-align:right"></div>
       </div>
       <button class="btn" onclick="saveSettings()">SIMPAN SETTINGS</button>
     </div>
@@ -310,7 +329,7 @@ input:focus,select:focus{border-color:var(--g)}
 // =============================================
 // KONFIGURASI FIREBASE — GANTI DENGAN MILIK ANDA
 // =============================================
-const FB_URL = 'https://lp-algo-panel-default-rtdb.asia-southeast1.firebasedatabase.app/'; // ← GANTI!
+const FB_URL = 'https://lp-algo-panel-default-rtdb.asia-southeast1.firebasedatabase.app';
 const ADMIN_PASSWORD = 'admin2025lpalgo'; // Password admin
 const REG_MASTER_KEY = 'LPALGO'; // Prefix kode registrasi
 
@@ -578,10 +597,23 @@ async function fetchStatus() {
       document.getElementById('st-ml').value = data.settings.main_lot || 0.02;
       document.getElementById('st-gp').value = data.settings.grid_pips || 9;
       document.getElementById('st-cl').value = data.settings.cut_loss || 0;
+      document.getElementById('st-eps').value = data.settings.entry_per_step || 8;
+      document.getElementById('st-nf').value = data.settings.news_filter !== undefined ? data.settings.news_filter : 1;
+      document.getElementById('st-nb').value = data.settings.news_before || 15;
+      document.getElementById('st-na').value = data.settings.news_after || 15;
+      document.getElementById('st-ar').value = data.settings.auto_restart || 0;
+      document.getElementById('st-cd').value = data.settings.cooldown_min || 2;
       document.getElementById('st-rl').value = data.settings.rsi_lot || 0.02;
       document.getElementById('st-rm').value = data.settings.rsi_max_entry || 70;
+      document.getElementById('st-mron').value = data.settings.mr_entry_on !== undefined ? data.settings.mr_entry_on : 1;
       document.getElementById('st-mrl').value = data.settings.mr_lot || 0.10;
+      document.getElementById('st-mrls').value = data.settings.mr_lot_step || 0.01;
+      document.getElementById('st-mrgp').value = data.settings.mr_grid_pips || 15;
+      document.getElementById('st-mrtp1').value = data.settings.mr_tp1_pips || 30;
+      document.getElementById('st-mrtpm').value = data.settings.mr_tp_multi || 3;
       document.getElementById('st-mrm').value = data.settings.mr_max_entry || 15;
+      document.getElementById('st-offh').value = data.settings.ea_off_hour || 3;
+      document.getElementById('st-onh').value = data.settings.ea_on_hour || 6;
     }
 
     // Logs
@@ -618,10 +650,23 @@ async function saveSettings() {
     main_lot: parseFloat(document.getElementById('st-ml').value) || 0.02,
     grid_pips: parseFloat(document.getElementById('st-gp').value) || 9,
     cut_loss: parseFloat(document.getElementById('st-cl').value) || 0,
+    entry_per_step: parseInt(document.getElementById('st-eps').value) || 8,
+    news_filter: parseInt(document.getElementById('st-nf').value),
+    news_before: parseInt(document.getElementById('st-nb').value) || 15,
+    news_after: parseInt(document.getElementById('st-na').value) || 15,
+    auto_restart: parseInt(document.getElementById('st-ar').value),
+    cooldown_min: parseInt(document.getElementById('st-cd').value) || 2,
     rsi_lot: parseFloat(document.getElementById('st-rl').value) || 0.02,
     rsi_max_entry: parseInt(document.getElementById('st-rm').value) || 70,
+    mr_entry_on: parseInt(document.getElementById('st-mron').value),
     mr_lot: parseFloat(document.getElementById('st-mrl').value) || 0.10,
+    mr_lot_step: parseFloat(document.getElementById('st-mrls').value) || 0.01,
+    mr_grid_pips: parseFloat(document.getElementById('st-mrgp').value) || 15,
+    mr_tp1_pips: parseFloat(document.getElementById('st-mrtp1').value) || 30,
+    mr_tp_multi: parseFloat(document.getElementById('st-mrtpm').value) || 3,
     mr_max_entry: parseInt(document.getElementById('st-mrm').value) || 15,
+    ea_off_hour: parseInt(document.getElementById('st-offh').value) || 3,
+    ea_on_hour: parseInt(document.getElementById('st-onh').value) || 6,
     time: Date.now()
   };
   await fbSet(`commands/${currentUser.account_id}`, settings);
@@ -650,21 +695,25 @@ async function loadClients() {
   }
 
   tbody.innerHTML = clients.map(([accId, c]) => {
-    const days = daysLeft(c.license_end);
-    const st = licStatus(c.license_end);
+    if (!c || typeof c !== 'object') return ''; // Skip data rusak
+    const name = c.name || 'Unknown';
+    const licEnd = c.license_end || '';
+    const licStart = c.license_start || '';
+    const days = daysLeft(licEnd);
+    const st = licStatus(licEnd);
     const stClass = st === 'active' ? 'lic-active' : 'lic-expired';
     return `<tr>
       <td>${c.no || '-'}</td>
-      <td style="color:var(--t)">${c.name}</td>
+      <td style="color:var(--t)">${name}</td>
       <td>${accId}</td>
-      <td style="font-size:9px">${dateStr(c.license_start)}<br>${dateStr(c.license_end)}<br><span style="color:${days > 0 ? 'var(--g)' : 'var(--r)'}">${days > 0 ? days + ' hari' : 'EXPIRED'}</span></td>
+      <td style="font-size:9px">${dateStr(licStart)}<br>${dateStr(licEnd)}<br><span style="color:${days > 0 ? 'var(--g)' : 'var(--r)'}">${days > 0 ? days + ' hari' : 'EXPIRED'}</span></td>
       <td class="${stClass}">${st.toUpperCase()}</td>
       <td>
         <button class="copy-btn" style="font-size:8px;padding:3px 6px;margin:2px 0" onclick="extendLicense('${accId}')">+30d</button>
         <button class="copy-btn" style="font-size:8px;padding:3px 6px;margin:2px 0;border-color:var(--r);color:var(--r)" onclick="deleteClient('${accId}')">DEL</button>
       </td>
     </tr>`;
-  }).join('');
+  }).filter(Boolean).join('');
 }
 
 async function extendLicense(accId) {
@@ -681,9 +730,13 @@ async function extendLicense(accId) {
 
 async function deleteClient(accId) {
   if (!confirm('Hapus client ' + accId + '?')) return;
-  await fbDelete(`clients/${accId}`);
-  toast('Client dihapus');
-  loadClients();
+  try {
+    await fbDelete(`clients/${accId}`);
+    toast('Client ' + accId + ' dihapus');
+  } catch (e) {
+    toast('Gagal hapus, coba lagi', true);
+  }
+  setTimeout(loadClients, 500);
 }
 
 async function addClientManual() {
