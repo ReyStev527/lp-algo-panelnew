@@ -592,8 +592,8 @@ async function fetchStatus() {
     document.getElementById('s-bl').textContent = (parseFloat(data.buy_lots) || 0).toFixed(2);
     document.getElementById('s-sl2').textContent = (parseFloat(data.sell_lots) || 0).toFixed(2);
 
-    // Settings
-    if (data.settings) {
+    // Settings — hanya update saat BUKAN di tab settings (agar tidak timpa input user)
+    if (data.settings && document.getElementById('dt-settings').style.display === 'none') {
       document.getElementById('st-ml').value = data.settings.main_lot || 0.02;
       document.getElementById('st-gp').value = data.settings.grid_pips || 9;
       document.getElementById('st-cl').value = data.settings.cut_loss || 0;
