@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#00ff88">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/manifest.json">
+<title>LP Algo — Control Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1a2332;--g:#00ff88;--gd:#0a3d2a;--r:#ff3366;--rd:#3d0a1a;--b:#00aaff;--go:#ffaa00;--t:#e0e6ed;--t2:#8899aa;--t3:#556677;--bd:#1e2d3d}
+body{background:var(--bg);color:var(--t);font-family:'JetBrains Mono',monospace;min-height:100vh}
+.app{max-width:480px;margin:0 auto;min-height:100vh;position:relative;overflow-x:hidden}
+.page{display:none;min-height:100vh}.page.active{display:block}
+input[type=text],input[type=password],input[type=number],input[type=date],select{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:11px 13px;color:var(--t);font-family:inherit;font-size:13px;outline:none;box-sizing:border-box}
+input:focus,select:focus{border-color:var(--g)}
+.lbl{font-size:9px;color:var(--t2);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.lbl .dot{color:var(--g)}
+.ig{margin-bottom:14px}
+.btn{width:100%;background:var(--gd);border:1px solid var(--g);color:var(--g);font-family:'Orbitron',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;padding:13px;border-radius:8px;cursor:pointer;text-transform:uppercase}
+.btn:active{background:var(--g);color:var(--bg);transform:scale(.97)}
+.btn.red{background:var(--rd);border-color:var(--r);color:var(--r)}
+.btn.blue{background:rgba(0,170,255,.1);border-color:var(--b);color:var(--b)}
+.btn.small{padding:8px 14px;font-size:10px;width:auto}
+.err{color:var(--r);font-size:11px;text-align:center;margin-top:10px;min-height:15px;background:var(--rd);border-radius:6px;padding:5px;display:none}
+.err.show{display:block}
+.ok{color:var(--g);font-size:11px;text-align:center;margin-top:10px;background:var(--gd);border-radius:6px;padding:8px;display:none}
+.ok.show{display:block}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--bd)}
+.brand{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;color:var(--g);letter-spacing:2px}
+.logout{background:none;border:1px solid var(--bd);color:var(--t2);font-size:9px;padding:3px 8px;border-radius:6px;cursor:pointer;font-family:inherit}
+.tabs{display:flex;background:var(--bg2);border-radius:12px;padding:4px;margin:0 16px 14px;border:1px solid var(--bd)}
+.tab{flex:1;text-align:center;padding:10px 0;font-size:9px;letter-spacing:1px;color:var(--t2);cursor:pointer;border-radius:8px;text-transform:uppercase;font-weight:500;transition:.2s}
+.tab.on{background:var(--gd);color:var(--g);border:1px solid rgba(0,255,136,.2)}
+.card{background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:12px}
+.card .title{font-family:'Orbitron',sans-serif;font-size:10px;color:var(--g);letter-spacing:2px;margin-bottom:10px}
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.sbox{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:12px}
+.sbox .sl{font-size:8px;color:var(--t2);letter-spacing:1.5px;text-transform:uppercase}
+.sbox .sv{font-size:15px;font-weight:600;color:var(--t);margin-top:3px}
+.sbox .sv.gr{color:var(--g)}.sbox .sv.rd{color:var(--r)}
+.acts{display:flex;gap:6px;margin-top:10px}
+.acts button{flex:1;padding:11px;border-radius:8px;border:1px solid var(--bd);background:var(--bg2);color:var(--t);font-family:inherit;font-size:9px;letter-spacing:1px;cursor:pointer;text-transform:uppercase}
+.acts .dng{border-color:rgba(255,51,102,.3);color:var(--r)}
+.power{text-align:center;padding:14px 0}
+.pbtn{width:110px;height:110px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:.3s;border:3px solid var(--g);background:radial-gradient(circle,var(--gd) 0%,transparent 70%)}
+.pbtn.off{border-color:var(--r);background:radial-gradient(circle,var(--rd) 0%,transparent 70%)}
+.plbl{margin-top:10px;font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:3px;font-weight:700}
+.plbl.on{color:var(--g)}.plbl.off{color:var(--r)}
+.badges{display:flex;justify-content:center;gap:6px;margin-top:8px;flex-wrap:wrap}
+.badge{font-size:9px;padding:3px 10px;border-radius:20px}
+.badge.on{background:var(--gd);color:var(--g);border:1px solid rgba(0,255,136,.3)}
+.badge.off{background:var(--rd);color:var(--r);border:1px solid rgba(255,51,102,.3)}
+.badge.inf{background:rgba(0,170,255,.1);color:var(--b);border:1px solid rgba(0,170,255,.3)}
+.profit-big{font-family:'Orbitron',sans-serif;font-size:28px;font-weight:800}
+.profit-big.plus{color:var(--g)}.profit-big.minus{color:var(--r)}.profit-big.zero{color:var(--t2)}
+.log-entry{font-size:9.5px;color:var(--t2);padding:4px 0;border-bottom:1px solid rgba(30,45,61,.3);line-height:1.6;word-break:break-all}
+.tbl{width:100%;border-collapse:collapse;font-size:10px}
+.tbl th{text-align:left;padding:6px 8px;border-bottom:1px solid var(--bd);color:var(--g);font-size:9px;letter-spacing:1px}
+.tbl td{padding:6px 8px;border-bottom:1px solid rgba(30,45,61,.3);color:var(--t2)}
+.tbl tr:hover td{background:rgba(0,255,136,.03)}
+.lic-active{color:var(--g)}.lic-expired{color:var(--r)}.lic-pending{color:var(--go)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--g);color:var(--g);font-size:11px;padding:8px 18px;border-radius:8px;z-index:1000;display:none}
+.toast.show{display:block}.toast.err{border-color:var(--r);color:var(--r)}
+.result-box{background:var(--bg);border:2px solid var(--g);border-radius:12px;padding:20px;text-align:center;margin-top:16px}
+.result-box .rpass{font-family:'Orbitron',sans-serif;font-size:24px;color:var(--g);letter-spacing:3px;margin:10px 0}
+.scanlines{position:fixed;inset:0;pointer-events:none;z-index:999;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px)}
+.center-page{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;min-height:100vh}
+.login-box{width:100%;max-width:340px;background:var(--bg2);border:1px solid var(--bd);border-radius:16px;padding:28px 22px;position:relative}
+.login-box::before{content:'';position:absolute;top:-1px;left:40px;right:40px;height:2px;background:linear-gradient(90deg,transparent,var(--g),transparent)}
+.logo{font-family:'Orbitron',sans-serif;font-size:32px;font-weight:900;color:var(--g);letter-spacing:4px;text-shadow:0 0 30px rgba(0,255,136,.4);margin-bottom:6px}
+.sub-logo{font-size:10px;color:var(--t2);letter-spacing:5px;text-transform:uppercase;margin-bottom:30px}
+.copy-btn{background:var(--gd);border:1px solid var(--g);color:var(--g);font-size:10px;padding:6px 16px;border-radius:6px;cursor:pointer;font-family:inherit}
+</style>
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="app" id="app">
+
+<!-- ==================== LOGIN ==================== -->
+<div class="page active" id="pg-login">
+<div class="center-page">
+  <div class="logo">LP ALGO</div>
+  <div class="sub-logo">Remote Control Panel</div>
+  <div class="login-box">
+    <div style="font-family:'Orbitron',sans-serif;font-size:12px;color:var(--t);letter-spacing:2px;margin-bottom:20px;text-align:center">⏻ LOGIN</div>
+    <div class="ig"><div class="lbl"><span class="dot">›</span> Account ID (Broker)</div>
+      <input type="text" id="l-acc" placeholder="Nomor akun broker" inputmode="numeric"></div>
+    <div class="ig"><div class="lbl"><span class="dot">›</span> Password</div>
+      <input type="password" id="l-pwd" placeholder="Password dari registrasi"></div>
+    <button class="btn" onclick="doLogin()">MASUK</button>
+    <div class="err" id="l-err"></div>
+    <div style="margin-top:16px;text-align:center">
+      <span style="font-size:10px;color:var(--t3)">Belum punya akun?</span>
+      <a href="#" onclick="showPage('pg-register');return false" style="font-size:10px;color:var(--b);text-decoration:none;margin-left:4px">Registrasi</a>
+    </div>
+  </div>
+  <div style="margin-top:20px;font-size:9px;color:var(--t3);letter-spacing:1px">LP ALGO PANEL v3.0 — Firebase Edition</div>
+</div>
+</div>
+
+<!-- ==================== REGISTER ==================== -->
+<div class="page" id="pg-register">
+<div class="center-page">
+  <div class="logo" style="font-size:24px">REGISTRASI</div>
+  <div class="sub-logo">Daftar setelah pembelian EA</div>
+  <div class="login-box">
+    <div style="font-family:'Orbitron',sans-serif;font-size:11px;color:var(--g);letter-spacing:2px;margin-bottom:20px;text-align:center">DATA CLIENT BARU</div>
+    <div class="ig"><div class="lbl"><span class="dot">›</span> Nama Lengkap</div>
+      <input type="text" id="r-name" placeholder="Nama Anda"></div>
+    <div class="ig"><div class="lbl"><span class="dot">›</span> Account ID Broker</div>
+      <input type="text" id="r-acc" placeholder="Nomor akun trading" inputmode="numeric"></div>
+    <div class="ig"><div class="lbl"><span class="dot">›</span> Kode Registrasi</div>
+      <input type="text" id="r-code" placeholder="Dari admin setelah pembayaran"></div>
+    <button class="btn" onclick="doRegister()">DAFTAR SEKARANG</button>
+    <div class="err" id="r-err"></div>
+    
+    <!-- Result setelah registrasi -->
+    <div class="result-box" id="r-result" style="display:none">
+      <div style="font-size:11px;color:var(--t2)">Registrasi berhasil! Password Anda:</div>
+      <div class="rpass" id="r-gen-pass">-</div>
+      <div style="font-size:10px;color:var(--go);margin-bottom:10px">⚠ CATAT PASSWORD INI! Tidak bisa dilihat lagi.</div>
+      <button class="copy-btn" onclick="copyPassword()">COPY PASSWORD</button>
+      <div style="margin-top:12px;font-size:10px;color:var(--t2)">
+        Lisensi: <span id="r-lic-info" style="color:var(--g)">-</span>
+      </div>
+    </div>
+    
+    <div style="margin-top:16px;text-align:center">
+      <a href="#" onclick="showPage('pg-login');return false" style="font-size:10px;color:var(--b);text-decoration:none">← Kembali ke Login</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== DASHBOARD ==================== -->
+<div class="page" id="pg-dash">
+  <div class="hdr">
+    <div class="brand">LP ALGO</div>
+    <div style="text-align:right">
+      <div style="font-size:11px;color:var(--t)" id="d-name">-</div>
+      <div style="font-size:9px;color:var(--t2)" id="d-acc">-</div>
+      <div style="font-size:8px;margin-top:2px" id="d-lic-badge">-</div>
+      <button class="logout" onclick="doLogout()">LOGOUT</button>
+    </div>
+  </div>
+  <div style="padding:12px 16px 0">
+    <div style="font-family:'Orbitron',sans-serif;font-size:16px;color:var(--g);font-weight:700" id="d-welcome">Selamat Datang!</div>
+    <div style="font-size:10px;color:var(--t2);margin-bottom:12px" id="d-lic-text">-</div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" id="d-tabs">
+    <div class="tab on" data-t="system" onclick="dTab('system')">SYSTEM</div>
+    <div class="tab" data-t="settings" onclick="dTab('settings')">SETTINGS</div>
+    <div class="tab" data-t="log" onclick="dTab('log')">LOG</div>
+  </div>
+
+  <div style="padding:0 16px 80px">
+    <!-- SYSTEM -->
+    <div id="dt-system">
+      <div class="power">
+        <div class="pbtn" id="p-btn" onclick="togglePower()">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="3" stroke-linecap="round"><path d="M12 2v10M18.36 6.64A9 9 0 1 1 5.64 6.64"/></svg>
+        </div>
+        <div class="plbl on" id="p-lbl">EA ONLINE</div>
+        <div class="badges">
+          <span class="badge on" id="s-badge">ONLINE</span>
+          <span class="badge inf" id="s-symbol">-</span>
+          <span class="badge inf" id="s-spread">SPR: -</span>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:9px;color:var(--t2);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">PROFIT HARI INI</div>
+        <div class="profit-big zero" id="s-profit">$0.00</div>
+        <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--bd)">
+          <div style="text-align:center;flex:1"><div style="font-size:13px;font-weight:600" id="s-float">$0.00</div><div style="font-size:8px;color:var(--t2);letter-spacing:1px;margin-top:2px">FLOATING</div></div>
+          <div style="text-align:center;flex:1"><div style="font-size:13px;font-weight:600" id="s-bal">$0.00</div><div style="font-size:8px;color:var(--t2);letter-spacing:1px;margin-top:2px">BALANCE</div></div>
+          <div style="text-align:center;flex:1"><div style="font-size:13px;font-weight:600" id="s-eq">$0.00</div><div style="font-size:8px;color:var(--t2);letter-spacing:1px;margin-top:2px">EQUITY</div></div>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="sbox"><div class="sl">BUY POS</div><div class="sv gr" id="s-bc">0</div></div>
+        <div class="sbox"><div class="sl">SELL POS</div><div class="sv rd" id="s-sc">0</div></div>
+        <div class="sbox"><div class="sl">BUY LOTS</div><div class="sv" id="s-bl">0.00</div></div>
+        <div class="sbox"><div class="sl">SELL LOTS</div><div class="sv" id="s-sl2">0.00</div></div>
+      </div>
+      <div class="acts">
+        <button class="dng" onclick="sendCmd('CLOSE_ALL')">CLOSE ALL</button>
+        <button onclick="sendCmd('CLOSE_BUY')">CLOSE BUY</button>
+        <button onclick="sendCmd('CLOSE_SELL')">CLOSE SELL</button>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="dt-settings" style="display:none">
+      <div class="card"><div class="title">MAIN ENTRY</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Main Lot</span><input type="number" id="st-ml" step="0.01" value="0.02" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Grid Pips</span><input type="number" id="st-gp" step="0.5" value="9.0" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Cut Loss ($)</span><input type="number" id="st-cl" step="10" value="0" style="width:75px;text-align:right"></div>
+      </div>
+      <div class="card"><div class="title">S2 MODULE</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S2 Lot</span><input type="number" id="st-rl" step="0.01" value="0.02" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">S2 Max Entry</span><input type="number" id="st-rm" step="1" value="70" style="width:75px;text-align:right"></div>
+      </div>
+      <div class="card"><div class="title">S3 MODULE</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 Lot</span><input type="number" id="st-mrl" step="0.01" value="0.10" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">S3 Max Entry</span><input type="number" id="st-mrm" step="1" value="15" style="width:75px;text-align:right"></div>
+      </div>
+      <button class="btn" onclick="saveSettings()">SIMPAN SETTINGS</button>
+    </div>
+
+    <!-- LOG -->
+    <div id="dt-log" style="display:none">
+      <div class="card">
+        <div class="title" style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--g);display:inline-block;animation:pulse 2s infinite"></span> EXPERT LOG</div>
+        <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}</style>
+        <div id="log-box"><div style="text-align:center;color:var(--t3);font-size:11px;padding:20px">Belum ada log...</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ADMIN ==================== -->
+<div class="page" id="pg-admin">
+  <div class="hdr">
+    <div class="brand">LP ALGO <span style="font-size:9px;color:var(--go);margin-left:4px">ADMIN</span></div>
+    <div><button class="logout" onclick="doLogout()">LOGOUT</button></div>
+  </div>
+  <div style="padding:12px 16px 0">
+    <div style="font-family:'Orbitron',sans-serif;font-size:16px;color:var(--go);font-weight:700">Admin Panel</div>
+    <div style="font-size:10px;color:var(--t2);margin-bottom:12px">Kelola client, lisensi, dan kode registrasi</div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab on" data-t="a-clients" onclick="aTab('a-clients')">CLIENTS</div>
+    <div class="tab" data-t="a-regcode" onclick="aTab('a-regcode')">REG CODE</div>
+    <div class="tab" data-t="a-add" onclick="aTab('a-add')">+ ADD</div>
+  </div>
+
+  <div style="padding:0 16px 80px">
+    <!-- CLIENTS LIST -->
+    <div id="at-a-clients">
+      <div style="display:flex;gap:6px;margin-bottom:12px">
+        <button class="btn small blue" onclick="exportCSV()">EXPORT CSV</button>
+        <button class="btn small" onclick="loadClients()">REFRESH</button>
+      </div>
+      <div class="card" style="padding:8px;overflow-x:auto">
+        <table class="tbl" id="clients-table">
+          <thead><tr><th>No</th><th>Nama</th><th>Account ID</th><th>Lisensi</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody id="clients-body"><tr><td colspan="6" style="text-align:center;color:var(--t3);padding:20px">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- REG CODES -->
+    <div id="at-a-regcode" style="display:none">
+      <div class="card">
+        <div class="title">BUAT KODE REGISTRASI</div>
+        <div class="ig"><div class="lbl"><span class="dot">›</span> Durasi Lisensi (hari)</div>
+          <input type="number" id="rc-days" value="30" min="1" style="width:120px"></div>
+        <div class="ig"><div class="lbl"><span class="dot">›</span> Jumlah Kode</div>
+          <input type="number" id="rc-count" value="1" min="1" max="20" style="width:120px"></div>
+        <button class="btn" onclick="generateRegCodes()">GENERATE KODE</button>
+      </div>
+      <div class="card" id="rc-results" style="display:none">
+        <div class="title">KODE REGISTRASI</div>
+        <div id="rc-list"></div>
+        <div style="margin-top:8px;font-size:9px;color:var(--t3)">Berikan kode ini ke client setelah pembayaran. Kode sekali pakai.</div>
+      </div>
+    </div>
+
+    <!-- ADD CLIENT MANUAL -->
+    <div id="at-a-add" style="display:none">
+      <div class="card">
+        <div class="title">TAMBAH CLIENT MANUAL</div>
+        <div class="ig"><div class="lbl"><span class="dot">›</span> Nama</div>
+          <input type="text" id="a-name" placeholder="Nama client"></div>
+        <div class="ig"><div class="lbl"><span class="dot">›</span> Account ID</div>
+          <input type="text" id="a-acc" placeholder="Nomor akun broker" inputmode="numeric"></div>
+        <div class="ig"><div class="lbl"><span class="dot">›</span> Lisensi Mulai</div>
+          <input type="date" id="a-start"></div>
+        <div class="ig"><div class="lbl"><span class="dot">›</span> Lisensi Akhir</div>
+          <input type="date" id="a-end"></div>
+        <button class="btn" onclick="addClientManual()">TAMBAH CLIENT</button>
+        <div class="ok" id="a-ok"></div>
+        <div class="err" id="a-err"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// =============================================
+// KONFIGURASI FIREBASE — GANTI DENGAN MILIK ANDA
+// =============================================
+const FB_URL = 'https://lp-algo-panel-default-rtdb.asia-southeast1.firebasedatabase.app/'; // ← GANTI!
+const ADMIN_PASSWORD = 'admin2025lpalgo'; // Password admin
+const REG_MASTER_KEY = 'LPALGO'; // Prefix kode registrasi
+
+// =============================================
+// STATE
+// =============================================
+let currentUser = null; // {account_id, name, role, license_start, license_end}
+let eaOn = true;
+let pollTimer = null;
+
+// =============================================
+// FIREBASE REST API HELPERS
+// =============================================
+async function fbGet(path) {
+  const res = await fetch(`${FB_URL}/${path}.json`);
+  return res.json();
+}
+async function fbSet(path, data) {
+  await fetch(`${FB_URL}/${path}.json`, { method: 'PUT', body: JSON.stringify(data) });
+}
+async function fbUpdate(path, data) {
+  await fetch(`${FB_URL}/${path}.json`, { method: 'PATCH', body: JSON.stringify(data) });
+}
+async function fbDelete(path) {
+  await fetch(`${FB_URL}/${path}.json`, { method: 'DELETE' });
+}
+
+// =============================================
+// UTILITY
+// =============================================
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function showErr(elId, msg) {
+  const el = document.getElementById(elId);
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+function showOk(elId, msg) {
+  const el = document.getElementById(elId);
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+function toast(msg, isErr) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isErr ? ' err' : '');
+  setTimeout(() => t.className = 'toast', 2500);
+}
+function genPassword() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let pw = '';
+  for (let i = 0; i < 8; i++) pw += chars[Math.floor(Math.random() * chars.length)];
+  return pw;
+}
+function genRegCode(days) {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = REG_MASTER_KEY + '-';
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  code += '-' + days + 'D';
+  return code;
+}
+function dateStr(d) { return d ? new Date(d).toLocaleDateString('id-ID') : '-'; }
+function daysLeft(endDate) {
+  if (!endDate) return 0;
+  return Math.ceil((new Date(endDate) - new Date()) / 86400000);
+}
+function licStatus(endDate) {
+  const d = daysLeft(endDate);
+  if (d > 0) return 'active';
+  return 'expired';
+}
+
+// =============================================
+// LOGIN
+// =============================================
+async function doLogin() {
+  const acc = document.getElementById('l-acc').value.trim();
+  const pwd = document.getElementById('l-pwd').value.trim();
+  if (!acc || !pwd) { showErr('l-err', 'Isi Account ID dan Password'); return; }
+
+  // Admin login
+  if (acc === 'admin' && pwd === ADMIN_PASSWORD) {
+    currentUser = { account_id: 'admin', name: 'Administrator', role: 'admin' };
+    showPage('pg-admin');
+    loadClients();
+    return;
+  }
+
+  try {
+    const client = await fbGet(`clients/${acc}`);
+    if (!client) { showErr('l-err', 'Account ID tidak ditemukan'); return; }
+    if (client.password !== pwd) { showErr('l-err', 'Password salah'); return; }
+
+    currentUser = client;
+    currentUser.account_id = acc;
+    localStorage.setItem('lp_session', JSON.stringify(currentUser));
+    enterDashboard();
+  } catch (e) {
+    showErr('l-err', 'Gagal connect ke server');
+  }
+}
+
+function doLogout() {
+  currentUser = null;
+  localStorage.removeItem('lp_session');
+  if (pollTimer) clearInterval(pollTimer);
+  showPage('pg-login');
+  document.getElementById('l-acc').value = '';
+  document.getElementById('l-pwd').value = '';
+}
+
+// Auto-login dari session
+(function() {
+  const s = localStorage.getItem('lp_session');
+  if (s) {
+    try {
+      currentUser = JSON.parse(s);
+      if (currentUser.role === 'admin') { showPage('pg-admin'); loadClients(); }
+      else enterDashboard();
+    } catch {}
+  }
+})();
+
+// =============================================
+// REGISTRATION (Client Self-Service)
+// =============================================
+async function doRegister() {
+  const name = document.getElementById('r-name').value.trim();
+  const acc = document.getElementById('r-acc').value.trim();
+  const code = document.getElementById('r-code').value.trim().toUpperCase();
+
+  if (!name || !acc || !code) { showErr('r-err', 'Semua field wajib diisi'); return; }
+  if (!/^\d+$/.test(acc)) { showErr('r-err', 'Account ID harus angka'); return; }
+
+  // Validasi kode registrasi
+  try {
+    const regCode = await fbGet(`reg_codes/${code}`);
+    if (!regCode) { showErr('r-err', 'Kode registrasi tidak valid'); return; }
+    if (regCode.used) { showErr('r-err', 'Kode sudah digunakan'); return; }
+
+    // Cek apakah account sudah terdaftar
+    const existing = await fbGet(`clients/${acc}`);
+    if (existing) { showErr('r-err', 'Account ID sudah terdaftar'); return; }
+
+    // Generate password dan set lisensi
+    const password = genPassword();
+    const today = new Date().toISOString().split('T')[0];
+    const endDate = new Date(Date.now() + regCode.days * 86400000).toISOString().split('T')[0];
+
+    // Hitung nomor urut
+    const allClients = await fbGet('clients') || {};
+    const no = Object.keys(allClients).length + 1;
+
+    // Simpan client
+    await fbSet(`clients/${acc}`, {
+      no: no,
+      name: name,
+      account_id: acc,
+      password: password,
+      license_start: today,
+      license_end: endDate,
+      status: 'active',
+      registered_at: new Date().toISOString()
+    });
+
+    // Mark kode sebagai used
+    await fbUpdate(`reg_codes/${code}`, { used: true, used_by: acc, used_at: new Date().toISOString() });
+
+    // Tampilkan hasil
+    document.getElementById('r-gen-pass').textContent = password;
+    document.getElementById('r-lic-info').textContent = `${dateStr(today)} — ${dateStr(endDate)} (${regCode.days} hari)`;
+    document.getElementById('r-result').style.display = 'block';
+    document.getElementById('r-err').classList.remove('show');
+
+  } catch (e) {
+    showErr('r-err', 'Gagal: ' + e.message);
+  }
+}
+
+function copyPassword() {
+  const pw = document.getElementById('r-gen-pass').textContent;
+  navigator.clipboard.writeText(pw).then(() => toast('Password di-copy!')).catch(() => {
+    const inp = document.createElement('textarea');
+    inp.value = pw; document.body.appendChild(inp); inp.select(); document.execCommand('copy');
+    document.body.removeChild(inp); toast('Password di-copy!');
+  });
+}
+
+// =============================================
+// DASHBOARD
+// =============================================
+function enterDashboard() {
+  showPage('pg-dash');
+  document.getElementById('d-name').textContent = currentUser.name;
+  document.getElementById('d-acc').textContent = 'ID: ' + currentUser.account_id;
+  document.getElementById('d-welcome').textContent = 'Selamat Datang, ' + currentUser.name + '!';
+
+  // License info
+  const days = daysLeft(currentUser.license_end);
+  const status = licStatus(currentUser.license_end);
+  const badge = document.getElementById('d-lic-badge');
+  badge.innerHTML = status === 'active'
+    ? `<span class="badge on">LISENSI: ${days} hari lagi</span>`
+    : `<span class="badge off">LISENSI EXPIRED</span>`;
+  document.getElementById('d-lic-text').textContent =
+    `Lisensi: ${dateStr(currentUser.license_start)} — ${dateStr(currentUser.license_end)}`;
+
+  fetchStatus();
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(fetchStatus, 5000);
+}
+
+function dTab(name) {
+  document.querySelectorAll('#d-tabs .tab').forEach(t => t.classList.remove('on'));
+  document.querySelector(`#d-tabs .tab[data-t="${name}"]`).classList.add('on');
+  ['system','settings','log'].forEach(n => {
+    document.getElementById('dt-' + n).style.display = n === name ? 'block' : 'none';
+  });
+}
+
+async function fetchStatus() {
+  if (!currentUser || currentUser.role === 'admin') return;
+  try {
+    const data = await fbGet(`ea_status/${currentUser.account_id}`);
+    if (!data) return;
+
+    const age = (Date.now() - (data.updated_at || 0)) / 1000;
+    const isOnline = data.status === 'ONLINE' && age < 30;
+    const isPaused = data.status === 'PAUSED';
+    eaOn = isOnline;
+
+    // Power
+    const pb = document.getElementById('p-btn');
+    const pl = document.getElementById('p-lbl');
+    const sb = document.getElementById('s-badge');
+    pb.className = 'pbtn' + (isOnline ? '' : ' off');
+    pb.querySelector('svg').setAttribute('stroke', isOnline ? 'var(--g)' : 'var(--r)');
+    pl.textContent = isOnline ? 'EA ONLINE' : isPaused ? 'EA PAUSED' : 'EA OFFLINE';
+    pl.className = 'plbl ' + (isOnline ? 'on' : 'off');
+    sb.textContent = isOnline ? 'ONLINE' : isPaused ? 'PAUSED' : 'OFFLINE';
+    sb.className = 'badge ' + (isOnline ? 'on' : 'off');
+
+    document.getElementById('s-symbol').textContent = data.symbol || '-';
+    document.getElementById('s-spread').textContent = 'SPR: ' + (data.spread || '-');
+
+    const tp = parseFloat(data.today_profit) || 0;
+    const pEl = document.getElementById('s-profit');
+    pEl.textContent = '$' + tp.toFixed(2);
+    pEl.className = 'profit-big ' + (tp > 0 ? 'plus' : tp < 0 ? 'minus' : 'zero');
+
+    const fl = parseFloat(data.floating) || 0;
+    document.getElementById('s-float').textContent = '$' + fl.toFixed(2);
+    document.getElementById('s-float').style.color = fl >= 0 ? 'var(--g)' : 'var(--r)';
+    document.getElementById('s-bal').textContent = '$' + (parseFloat(data.balance) || 0).toFixed(2);
+    document.getElementById('s-eq').textContent = '$' + (parseFloat(data.equity) || 0).toFixed(2);
+    document.getElementById('s-bc').textContent = data.buy_count || 0;
+    document.getElementById('s-sc').textContent = data.sell_count || 0;
+    document.getElementById('s-bl').textContent = (parseFloat(data.buy_lots) || 0).toFixed(2);
+    document.getElementById('s-sl2').textContent = (parseFloat(data.sell_lots) || 0).toFixed(2);
+
+    // Settings
+    if (data.settings) {
+      document.getElementById('st-ml').value = data.settings.main_lot || 0.02;
+      document.getElementById('st-gp').value = data.settings.grid_pips || 9;
+      document.getElementById('st-cl').value = data.settings.cut_loss || 0;
+      document.getElementById('st-rl').value = data.settings.rsi_lot || 0.02;
+      document.getElementById('st-rm').value = data.settings.rsi_max_entry || 70;
+      document.getElementById('st-mrl').value = data.settings.mr_lot || 0.10;
+      document.getElementById('st-mrm').value = data.settings.mr_max_entry || 15;
+    }
+
+    // Logs
+    if (data.logs) {
+      const logs = data.logs.split('||').filter(Boolean).reverse();
+      document.getElementById('log-box').innerHTML = logs.map(log => {
+        const p = log.split(' > ');
+        const time = p[0] || '';
+        const msg = p.slice(1).join(' > ') || log;
+        const cls = msg.includes('[CMD]') ? 'color:var(--go)' : msg.includes('[SYSTEM]') ? 'color:var(--b)' : msg.includes('CLOSE') ? 'color:var(--r)' : msg.includes('BUY') || msg.includes('TP') ? 'color:var(--g)' : '';
+        return `<div class="log-entry"><span style="color:var(--t3)">${time}</span> <span style="${cls}">${msg}</span></div>`;
+      }).join('');
+    }
+  } catch (e) {}
+}
+
+async function togglePower() {
+  const cmd = eaOn ? 'POWER_OFF' : 'POWER_ON';
+  if (eaOn && !confirm('Yakin matikan EA?')) return;
+  await fbSet(`commands/${currentUser.account_id}`, { command: cmd, time: Date.now() });
+  toast('Command: ' + cmd);
+  setTimeout(fetchStatus, 1500);
+}
+
+async function sendCmd(cmd) {
+  if (!confirm('Yakin ' + cmd + '?')) return;
+  await fbSet(`commands/${currentUser.account_id}`, { command: cmd, time: Date.now() });
+  toast('Command: ' + cmd);
+}
+
+async function saveSettings() {
+  const settings = {
+    command: 'UPDATE_SETTINGS',
+    main_lot: parseFloat(document.getElementById('st-ml').value) || 0.02,
+    grid_pips: parseFloat(document.getElementById('st-gp').value) || 9,
+    cut_loss: parseFloat(document.getElementById('st-cl').value) || 0,
+    rsi_lot: parseFloat(document.getElementById('st-rl').value) || 0.02,
+    rsi_max_entry: parseInt(document.getElementById('st-rm').value) || 70,
+    mr_lot: parseFloat(document.getElementById('st-mrl').value) || 0.10,
+    mr_max_entry: parseInt(document.getElementById('st-mrm').value) || 15,
+    time: Date.now()
+  };
+  await fbSet(`commands/${currentUser.account_id}`, settings);
+  toast('Settings disimpan!');
+}
+
+// =============================================
+// ADMIN PANEL
+// =============================================
+function aTab(name) {
+  document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('on'));
+  document.querySelector(`.tab[data-t="${name}"]`).classList.add('on');
+  ['a-clients','a-regcode','a-add'].forEach(n => {
+    document.getElementById('at-' + n).style.display = n === name ? 'block' : 'none';
+  });
+}
+
+async function loadClients() {
+  const data = await fbGet('clients') || {};
+  const tbody = document.getElementById('clients-body');
+  const clients = Object.entries(data).sort((a, b) => (a[1].no || 0) - (b[1].no || 0));
+
+  if (clients.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--t3);padding:20px">Belum ada client</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = clients.map(([accId, c]) => {
+    const days = daysLeft(c.license_end);
+    const st = licStatus(c.license_end);
+    const stClass = st === 'active' ? 'lic-active' : 'lic-expired';
+    return `<tr>
+      <td>${c.no || '-'}</td>
+      <td style="color:var(--t)">${c.name}</td>
+      <td>${accId}</td>
+      <td style="font-size:9px">${dateStr(c.license_start)}<br>${dateStr(c.license_end)}<br><span style="color:${days > 0 ? 'var(--g)' : 'var(--r)'}">${days > 0 ? days + ' hari' : 'EXPIRED'}</span></td>
+      <td class="${stClass}">${st.toUpperCase()}</td>
+      <td>
+        <button class="copy-btn" style="font-size:8px;padding:3px 6px;margin:2px 0" onclick="extendLicense('${accId}')">+30d</button>
+        <button class="copy-btn" style="font-size:8px;padding:3px 6px;margin:2px 0;border-color:var(--r);color:var(--r)" onclick="deleteClient('${accId}')">DEL</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function extendLicense(accId) {
+  const days = parseInt(prompt('Tambah berapa hari?', '30'));
+  if (!days || days <= 0) return;
+  const client = await fbGet(`clients/${accId}`);
+  if (!client) return;
+  const currentEnd = new Date(client.license_end || Date.now());
+  const newEnd = new Date(Math.max(currentEnd.getTime(), Date.now()) + days * 86400000);
+  await fbUpdate(`clients/${accId}`, { license_end: newEnd.toISOString().split('T')[0], status: 'active' });
+  toast('Lisensi diperpanjang ' + days + ' hari');
+  loadClients();
+}
+
+async function deleteClient(accId) {
+  if (!confirm('Hapus client ' + accId + '?')) return;
+  await fbDelete(`clients/${accId}`);
+  toast('Client dihapus');
+  loadClients();
+}
+
+async function addClientManual() {
+  const name = document.getElementById('a-name').value.trim();
+  const acc = document.getElementById('a-acc').value.trim();
+  const start = document.getElementById('a-start').value;
+  const end = document.getElementById('a-end').value;
+  if (!name || !acc || !start || !end) { showErr('a-err', 'Semua field wajib diisi'); return; }
+
+  const password = genPassword();
+  const allClients = await fbGet('clients') || {};
+  const no = Object.keys(allClients).length + 1;
+
+  await fbSet(`clients/${acc}`, {
+    no, name, account_id: acc, password,
+    license_start: start, license_end: end,
+    status: 'active', registered_at: new Date().toISOString()
+  });
+  showOk('a-ok', `Client ditambahkan! Password: ${password}`);
+  loadClients();
+}
+
+// =============================================
+// REGISTRATION CODES
+// =============================================
+async function generateRegCodes() {
+  const days = parseInt(document.getElementById('rc-days').value) || 30;
+  const count = Math.min(parseInt(document.getElementById('rc-count').value) || 1, 20);
+
+  const codes = [];
+  for (let i = 0; i < count; i++) {
+    const code = genRegCode(days);
+    await fbSet(`reg_codes/${code}`, { days, used: false, created_at: new Date().toISOString() });
+    codes.push(code);
+  }
+
+  document.getElementById('rc-results').style.display = 'block';
+  document.getElementById('rc-list').innerHTML = codes.map(c =>
+    `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(30,45,61,.3)">
+      <span style="font-family:'Orbitron',sans-serif;font-size:12px;color:var(--g);letter-spacing:1px">${c}</span>
+      <button class="copy-btn" style="font-size:8px;padding:3px 8px" onclick="navigator.clipboard.writeText('${c}');toast('Copied!')">COPY</button>
+    </div>`
+  ).join('');
+  toast(count + ' kode dibuat (masing-masing ' + days + ' hari)');
+}
+
+// =============================================
+// EXPORT CSV
+// =============================================
+async function exportCSV() {
+  const data = await fbGet('clients') || {};
+  const clients = Object.entries(data).sort((a, b) => (a[1].no || 0) - (b[1].no || 0));
+
+  let csv = 'No,Nama,Account ID,Password,Lisensi Mulai,Lisensi Akhir,Sisa Hari,Status,Tanggal Daftar\n';
+  clients.forEach(([accId, c]) => {
+    const days = daysLeft(c.license_end);
+    const st = licStatus(c.license_end);
+    csv += `${c.no || ''},"${c.name}",${accId},${c.password},${c.license_start},${c.license_end},${days},${st},"${c.registered_at || ''}"\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `LP_Algo_Clients_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV berhasil di-download!');
+}
+
+// Set default dates
+document.getElementById('a-start').value = new Date().toISOString().split('T')[0];
+document.getElementById('a-end').value = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
+
+// Enter key login
+document.getElementById('l-pwd').addEventListener('keypress', e => { if (e.key === 'Enter') doLogin(); });
+
+// PWA Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+}
+</script>
+</body>
+</html>
