@@ -512,10 +512,17 @@ input:focus,select:focus{border-color:var(--g)}
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Grid Pips</span><input type="number" id="st-gp" step="0.5" value="9.0" style="width:75px;text-align:right"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Entry Per Step</span><input type="number" id="st-eps" step="1" min="1" value="8" style="width:75px;text-align:right"></div>
       </div>
+      <div class="card"><div class="title">TRAILING SL</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Trail SL Pips</span><input type="number" id="st-tslp" step="0.5" value="10.0" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Trail SL Min Profit</span><input type="number" id="st-tslm" step="0.1" value="0.5" style="width:75px;text-align:right"></div>
+      </div>
       <div class="card"><div class="title">NEWS FILTER</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">News Filter</span><select id="st-nf" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Stop Sebelum (menit)</span><input type="number" id="st-nb" step="1" min="0" value="15" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Stop Sesudah (menit)</span><input type="number" id="st-na" step="1" min="0" value="15" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Stop Sesudah (menit)</span><input type="number" id="st-na" step="1" min="0" value="15" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Gold Keyword Filter</span><select id="st-gkf" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Gold Before (menit)</span><input type="number" id="st-gb" step="1" min="0" value="10" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Gold After (menit)</span><input type="number" id="st-ga" step="1" min="0" value="10" style="width:75px;text-align:right"></div>
       </div>
       <div class="card"><div class="title">AUTO-RESTART</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Auto-Restart</span><select id="st-ar" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="0">OFF</option><option value="1">ON</option></select></div>
@@ -523,7 +530,8 @@ input:focus,select:focus{border-color:var(--g)}
       </div>
       <div class="card"><div class="title">S2 MODULE</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S2 Lot</span><input type="number" id="st-rl" step="0.01" value="0.02" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">S2 Max Entry</span><input type="number" id="st-rm" step="1" value="70" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S2 Max Entry</span><input type="number" id="st-rm" step="1" value="70" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">S2 Lot Skip</span><input type="number" id="st-rls" step="1" min="0" value="0" style="width:75px;text-align:right"></div>
       </div>
       <div class="card"><div class="title">S3 MODULE</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 Module</span><select id="st-mron" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
@@ -1026,6 +1034,12 @@ async function fetchStatus() {
       document.getElementById('st-mrm').value = data.settings.mr_max_entry || 15;
       document.getElementById('st-offh').value = data.settings.ea_off_hour || 3;
       document.getElementById('st-onh').value = data.settings.ea_on_hour || 6;
+      document.getElementById('st-tslp').value = data.settings.trail_sl_pips || 10.0;
+      document.getElementById('st-tslm').value = data.settings.trail_sl_min_profit || 0.5;
+      document.getElementById('st-gkf').value = data.settings.gold_keyword_filter != null ? data.settings.gold_keyword_filter : 1;
+      document.getElementById('st-gb').value = data.settings.gold_before || 10;
+      document.getElementById('st-ga').value = data.settings.gold_after || 10;
+      document.getElementById('st-rls').value = data.settings.rsi_lot_skip || 0;
     }
 
     // Logs
@@ -1079,6 +1093,12 @@ async function saveSettings() {
     mr_max_entry: parseInt(document.getElementById('st-mrm').value) || 15,
     ea_off_hour: parseInt(document.getElementById('st-offh').value) || 3,
     ea_on_hour: parseInt(document.getElementById('st-onh').value) || 6,
+    trail_sl_pips: parseFloat(document.getElementById('st-tslp').value) || 10.0,
+    trail_sl_min_profit: parseFloat(document.getElementById('st-tslm').value) || 0.5,
+    gold_keyword_filter: parseInt(document.getElementById('st-gkf').value),
+    gold_before: parseInt(document.getElementById('st-gb').value) || 10,
+    gold_after: parseInt(document.getElementById('st-ga').value) || 10,
+    rsi_lot_skip: parseInt(document.getElementById('st-rls').value) || 0,
     time: Date.now()
   };
   await fbSet(`commands/${currentUser.account_id}`, settings);
