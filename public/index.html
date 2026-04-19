@@ -696,6 +696,17 @@ input:focus,select:focus{border-color:var(--g)}
 // KONFIGURASI FIREBASE — GANTI DENGAN MILIK ANDA
 // =============================================
 const FB_URL = 'https://lp-algo-panel-default-rtdb.asia-southeast1.firebasedatabase.app';
+const LICENSE_SECRET = 'LP@2025#Algo$Sec!K9vX7zR4mW';  // Harus sama dengan EA
+
+function generateLicenseHash(accountId, licenseEnd) {
+  const raw = accountId + '|' + licenseEnd + '|' + LICENSE_SECRET;
+  let hash = BigInt(5381);
+  for (let i = 0; i < raw.length; i++) {
+    hash = ((hash << BigInt(5)) + hash) + BigInt(raw.charCodeAt(i));
+    hash = hash & BigInt('0xFFFFFFFFFFFFFFFF');  // Keep 64-bit
+  }
+  return hash.toString(16).toUpperCase().padStart(16, '0');
+}
 const ADMIN_PASSWORD = 'admin2025lpalgo'; // Password admin
 const REG_MASTER_KEY = 'LPALGO'; // Prefix kode registrasi
 
@@ -870,6 +881,7 @@ async function doRegister() {
       password: password,
       license_start: today,
       license_end: endDate,
+      license_hash: generateLicenseHash(acc, endDate),
       status: 'active',
       referred_by: validReferral ? referrerId : '',
       referral_count: 0,
@@ -886,8 +898,10 @@ async function doRegister() {
       const currentEnd = new Date(referrer.license_end || Date.now());
       const newEnd = new Date(Math.max(currentEnd.getTime(), Date.now()) + 10 * 86400000);
       const newCount = (referrer.referral_count || 0) + 1;
+      const refEndStr = newEnd.toISOString().split('T')[0];
       await fbUpdate(`clients/${referrerId}`, { 
-        license_end: newEnd.toISOString().split('T')[0],
+        license_end: refEndStr,
+        license_hash: generateLicenseHash(referrerId, refEndStr),
         referral_count: newCount
       });
       refMsg = ` (Referral dari ${referrerId} — bonus +10 hari diberikan!)`;
@@ -1157,7 +1171,8 @@ async function extendLicense(accId) {
   if (!client) return;
   const currentEnd = new Date(client.license_end || Date.now());
   const newEnd = new Date(Math.max(currentEnd.getTime(), Date.now()) + days * 86400000);
-  await fbUpdate(`clients/${accId}`, { license_end: newEnd.toISOString().split('T')[0], status: 'active' });
+  const newEndStr = newEnd.toISOString().split('T')[0];
+  await fbUpdate(`clients/${accId}`, { license_end: newEndStr, license_hash: generateLicenseHash(accId, newEndStr), status: 'active' });
   toast('Lisensi diperpanjang ' + days + ' hari');
   loadClients();
 }
@@ -1186,7 +1201,7 @@ async function addClientManual() {
 
   await fbSet(`clients/${acc}`, {
     no, name, account_id: acc, password,
-    license_start: start, license_end: end,
+    license_start: start, license_end: end, license_hash: generateLicenseHash(acc, end),
     status: 'active', registered_at: new Date().toISOString()
   });
   showOk('a-ok', `Client ditambahkan! Password: ${password}`);
