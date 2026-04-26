@@ -632,6 +632,47 @@
     .phone-badge-2{right:-4%}
     .phone-badge-3{left:-4%}
   }
+
+  /* ===== MOBILE SMALL (<600px) ===== */
+  @media (max-width:600px){
+    .container{padding:0 16px}
+    .hero{padding:100px 0 40px}
+    .hero-left{text-align:center}
+    .hero-left > .reveal:first-child{justify-content:center}
+    .hero-desc{margin:0 auto 24px}
+    .hero-cta-row{justify-content:center}
+    .hero-stats{justify-content:center;gap:24px}
+    .hero-title{font-size:clamp(28px,7vw,42px)}
+    .section{padding:60px 0}
+    .section-title{font-size:clamp(24px,5vw,36px)}
+    .section-head{margin-bottom:40px}
+    .live-feed-grid{grid-template-columns:1fr;height:280px}
+    .footer-grid{grid-template-columns:1fr;gap:24px;text-align:center}
+    .footer-col{text-align:center}
+    .footer-brand{align-items:center;text-align:center}
+    .footer-bottom{flex-direction:column;gap:8px;text-align:center}
+    .buy-modal{padding:20px;border-radius:18px}
+    .buy-modal-pkg-grid{grid-template-columns:1fr;gap:6px}
+    .cta-title{font-size:clamp(22px,5vw,32px)}
+    .cta-sub{font-size:14px}
+    .panel-mobile-grid{gap:30px}
+    .phone-stage{max-width:260px}
+    .phone-badge{font-size:8px;padding:5px 8px}
+    .phone-badge-1{left:0%}
+    .phone-badge-2{right:0%}
+    .phone-badge-3{left:0%}
+    .price-card{padding:24px 18px}
+    .marquee-item{font-size:13px;gap:16px}
+    .step-card{padding:24px 18px}
+    .faq-q{font-size:14px;padding:14px 16px}
+    .faq-a{padding:0 16px 14px}
+  }
+  /* ===== MOBILE MENU OVERLAY ===== */
+  .mob-overlay{position:fixed;inset:0;background:rgba(5,13,26,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:9998;display:none;flex-direction:column;align-items:center;justify-content:center;gap:0}
+  .mob-overlay.show{display:flex}
+  .mob-overlay a{font-family:var(--d);font-size:22px;font-weight:700;color:var(--t);text-decoration:none;padding:18px 40px;letter-spacing:.5px;transition:color .2s;text-align:center}
+  .mob-overlay a:hover{color:var(--g)}
+  .mob-close{position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:50%;border:1px solid var(--line-2);background:transparent;color:var(--t);font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
@@ -1734,16 +1775,29 @@
 
   // Mobile menu (simple - just scroll to anchors)
   function toggleMobileMenu(){
-    // Simple alert for now - full mobile drawer would be more code
-    const menu = ['#fitur','#cara-kerja','#hasil','#harga','#faq'];
-    const labels = ['Fitur','Cara Kerja','Hasil','Harga','FAQ'];
-    const choice = prompt('Navigasi ke:\n' + labels.map((l,i)=>(i+1)+'. '+l).join('\n') + '\n\nKetik nomor (1-5):');
-    const idx = parseInt(choice) - 1;
-    if (idx >= 0 && idx < menu.length) {
-      document.querySelector(menu[idx]).scrollIntoView({behavior:'smooth'});
-    }
+    const ov = document.getElementById('mobOverlay');
+    ov.classList.toggle('show');
+    document.body.style.overflow = ov.classList.contains('show') ? 'hidden' : '';
+  }
+  function closeMobMenu(){
+    document.getElementById('mobOverlay').classList.remove('show');
+    document.body.style.overflow = '';
   }
 </script>
+
+<!-- MOBILE MENU OVERLAY -->
+<div class="mob-overlay" id="mobOverlay">
+  <button class="mob-close" onclick="closeMobMenu()">✕</button>
+  <a href="#fitur" onclick="closeMobMenu()">Fitur</a>
+  <a href="#panel-mobile" onclick="closeMobMenu()">Panel</a>
+  <a href="#cara-kerja" onclick="closeMobMenu()">Cara Kerja</a>
+  <a href="#hasil" onclick="closeMobMenu()">Hasil</a>
+  <a href="#harga" onclick="closeMobMenu()">Harga</a>
+  <a href="#faq" onclick="closeMobMenu()">FAQ</a>
+  <div style="margin-top:20px">
+    <button onclick="closeMobMenu();openBuyModal()" class="btn btn-primary" style="font-size:16px;padding:14px 32px">Beli Sekarang</button>
+  </div>
+</div>
 
 </body>
 </html>
