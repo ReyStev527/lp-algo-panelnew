@@ -579,6 +579,29 @@
     .nav-burger{display:flex}
     .nav-cta .btn-ghost{display:none}
   }
+  /* ===== BUY MODAL ===== */
+  .buy-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;animation:bmFadeIn .25s ease}
+  .buy-modal-bg.show{display:flex}
+  .buy-modal{background:linear-gradient(180deg,#0a1628,#050d1a);border:1px solid var(--line-2);border-radius:24px;padding:32px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,255,136,.15),0 0 0 1px rgba(0,255,136,.1);position:relative;animation:bmSlideUp .35s cubic-bezier(.4,0,.2,1)}
+  .buy-modal-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--t-2);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:2}
+  .buy-modal-close:hover{background:rgba(255,59,110,.15);border-color:rgba(255,59,110,.4);color:#ff5577}
+  .buy-modal-head{text-align:center;margin-bottom:24px}
+  .buy-modal-pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+  .buy-pkg{padding:12px 8px;border-radius:12px;border:1px solid var(--line);background:rgba(15,33,56,.4);cursor:pointer;text-align:center;transition:all .2s}
+  .buy-pkg:hover,.buy-pkg.active{border-color:var(--g);background:rgba(0,255,136,.08);transform:translateY(-2px)}
+  .buy-pkg-name{font-family:var(--d);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--g);margin-bottom:4px}
+  .buy-pkg-price{font-family:var(--d);font-size:13px;font-weight:800;color:var(--t);line-height:1.2}
+  .buy-modal-info{background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.18);border-radius:12px;padding:14px;margin-bottom:18px;font-size:12px;color:var(--t-2);line-height:1.6}
+  .buy-modal-info strong{color:var(--t)}
+  .buy-cta-tg{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;border-radius:12px;background:linear-gradient(135deg,#229ED9,#0088cc);color:#fff;font-family:var(--body);font-size:15px;font-weight:700;letter-spacing:.5px;text-decoration:none;transition:all .25s;margin-bottom:10px;box-shadow:0 8px 24px rgba(34,158,217,.3)}
+  .buy-cta-tg:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(34,158,217,.5)}
+  .buy-cta-secondary{display:block;text-align:center;padding:12px;font-size:12px;color:var(--t-2);text-decoration:none;border:1px solid var(--line);border-radius:10px;transition:all .2s}
+  .buy-cta-secondary:hover{border-color:var(--line-2);color:var(--g)}
+  .buy-modal-divider{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--t-3);font-size:10px;letter-spacing:2px}
+  .buy-modal-divider::before,.buy-modal-divider::after{content:'';flex:1;height:1px;background:var(--line)}
+  @keyframes bmFadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes bmSlideUp{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+
   /* ===== MOBILE CONTROL PANEL SECTION ===== */
   .panel-mobile-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:center}
   .phone-stage{position:relative;max-width:380px;margin:0 auto;aspect-ratio:1/1.6}
@@ -634,10 +657,10 @@
     </div>
     <div class="nav-cta">
       <a href="app.html#pg-login" class="btn btn-ghost">Login</a>
-      <a href="app.html#pg-buy" class="btn btn-primary">
+      <button onclick="openBuyModal()" class="btn btn-primary">
         Beli Sekarang
         <svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+      </button>
       <button class="nav-burger" onclick="toggleMobileMenu()" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
@@ -671,10 +694,10 @@
         Dual-engine AI dengan smart averaging, filter berita otomatis, dan proteksi lisensi unik — <strong style="color:var(--t)">loss hari ini? lisensi +2 hari. Margin Call? auto extend.</strong> Dibuat khusus untuk akun Exness Indonesia.
       </p>
       <div class="hero-cta-row reveal in reveal-d3">
-        <a href="app.html#pg-buy" class="btn btn-primary btn-lg">
+        <button onclick="openBuyModal()" class="btn btn-primary btn-lg">
           Mulai Trading Hari Ini
           <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+        </button>
         <a href="#cara-kerja" class="btn btn-ghost btn-lg">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><polygon points="5 3 19 12 5 21 5 3" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
           Lihat Cara Kerja
@@ -1261,7 +1284,7 @@
           </div>
         </div>
 
-        <a href="app.html#pg-login" class="btn btn-primary btn-lg reveal" style="margin-top:32px">
+        <a href="https://t.me/Ladangpertanian?text=Halo%2C%20saya%20ingin%20mencoba%20demo%20panel%20LP%20Algo%207.6" target="_blank" class="btn btn-primary btn-lg reveal" style="margin-top:32px">
           Coba Demo Panel
           <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
@@ -1390,7 +1413,7 @@
           <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Support via Telegram</li>
           <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Proteksi otomatis (loss/MC)</li>
         </ul>
-        <a href="app.html#pg-buy" class="btn btn-ghost">Pilih Paket Ini</a>
+        <button onclick="selectPkg(document.querySelectorAll('.buy-pkg')[0]);openBuyModal()" class="btn btn-ghost">Pilih Paket Ini</button>
       </div>
 
       <!-- Paket 3 Bulan (popular) -->
@@ -1408,7 +1431,7 @@
           <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Priority support Telegram</li>
           <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Proteksi otomatis (loss/MC)</li>
         </ul>
-        <a href="app.html#pg-buy" class="btn btn-primary">Pilih Paket Ini</a>
+        <button onclick="selectPkg(document.querySelectorAll('.buy-pkg')[1]);openBuyModal()" class="btn btn-primary">Pilih Paket Ini</button>
       </div>
 
       <!-- Paket Lifetime -->
@@ -1424,7 +1447,7 @@
           <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>VIP support langsung owner</li>
           <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Custom strategy on-request</li>
         </ul>
-        <a href="app.html#pg-buy" class="btn btn-ghost">Pilih Paket Ini</a>
+        <button onclick="selectPkg(document.querySelectorAll('.buy-pkg')[2]);openBuyModal()" class="btn btn-ghost">Pilih Paket Ini</button>
       </div>
     </div>
   </div>
@@ -1534,10 +1557,10 @@
       <h2 class="cta-title">Siap mulai trading <span class="accent">otomatis</span><br>tanpa harus pelototin chart?</h2>
       <p class="cta-sub">Bergabung dengan 200+ trader yang sudah menyerahkan eksekusi ke AI. Anda fokus ke aktivitas lain, EA fokus ke market.</p>
       <div class="cta-row">
-        <a href="app.html#pg-buy" class="btn btn-primary btn-lg">
+        <button onclick="openBuyModal()" class="btn btn-primary btn-lg">
           Mulai Sekarang
           <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+        </button>
         <a href="https://t.me/Ladangpertanian" target="_blank" class="btn btn-ghost btn-lg">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
           Tanya via Telegram
@@ -1582,7 +1605,7 @@
         <h4 class="footer-col-title">Akun</h4>
         <a href="app.html#pg-login" class="footer-link">Login</a>
         <a href="app.html#pg-register" class="footer-link">Registrasi</a>
-        <a href="app.html#pg-buy" class="footer-link">Beli EA</a>
+        <a href="#" onclick="openBuyModal();return false" class="footer-link">Beli EA</a>
         <a href="#faq" class="footer-link">FAQ</a>
       </div>
       <div>
@@ -1599,7 +1622,87 @@
   </div>
 </footer>
 
+<!-- ============ BUY MODAL ============ -->
+<div class="buy-modal-bg" id="buy-modal" onclick="if(event.target===this)closeBuyModal()" role="dialog" aria-modal="true" aria-labelledby="buy-modal-title">
+  <div class="buy-modal">
+    <button class="buy-modal-close" onclick="closeBuyModal()" aria-label="Tutup">&times;</button>
+
+    <div class="buy-modal-head">
+      <div style="display:inline-flex;width:60px;height:60px;border-radius:50%;background:rgba(0,255,136,.1);border:2px solid rgba(0,255,136,.4);align-items:center;justify-content:center;margin-bottom:14px;box-shadow:0 0 30px rgba(0,255,136,.3)">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M3 12L8 7L12 11L21 2M21 2H15M21 2V8" stroke="#00ff88" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3 id="buy-modal-title" style="font-family:var(--d);font-size:22px;font-weight:800;color:var(--t);margin-bottom:6px;letter-spacing:-.01em">Tertarik dengan <span class="accent">LP Algo 7.6</span>?</h3>
+      <p style="font-size:13px;color:var(--t-2);line-height:1.6">Pilih paket di bawah, lalu hubungi kami via Telegram untuk proses pembelian &amp; setup.</p>
+    </div>
+
+    <div style="font-size:10px;color:var(--t-3);letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:10px">Pilih Paket</div>
+    <div class="buy-modal-pkg-grid">
+      <div class="buy-pkg" data-pkg="1 Bulan — Rp 1.500.000" onclick="selectPkg(this)">
+        <div class="buy-pkg-name">1 BULAN</div>
+        <div class="buy-pkg-price">1.500K</div>
+      </div>
+      <div class="buy-pkg active" data-pkg="3 Bulan — Rp 3.000.000" onclick="selectPkg(this)">
+        <div class="buy-pkg-name" style="color:var(--gold)">★ 3 BULAN</div>
+        <div class="buy-pkg-price">3.000K</div>
+      </div>
+      <div class="buy-pkg" data-pkg="Lifetime — Rp 6.000.000" onclick="selectPkg(this)">
+        <div class="buy-pkg-name">LIFETIME</div>
+        <div class="buy-pkg-price">6.000K</div>
+      </div>
+    </div>
+
+    <div class="buy-modal-info">
+      <strong>📦 Yang Anda dapatkan:</strong><br>
+      ✓ EA file LP Algo 7.6 (.ex5 + .set) &middot; ✓ VPS hosting (pembelian pertama) &middot; ✓ Akses panel kontrol mobile &middot; ✓ Tutorial setup &middot; ✓ Update gratis &middot; ✓ Support langsung dari developer
+    </div>
+
+    <a href="https://t.me/Ladangpertanian" target="_blank" rel="noopener" class="buy-cta-tg" id="buy-tg-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      <span>Hubungi via Telegram</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+
+    <div style="text-align:center;font-size:10px;color:var(--t-3);margin-bottom:14px">Direspon dalam &lt; 30 menit jam kerja (08:00–22:00 WIB)</div>
+
+    <div class="buy-modal-divider">ATAU</div>
+
+    <a href="app.html#pg-buy" class="buy-cta-secondary">📱 Lanjut ke Halaman Pembelian Online &rarr;</a>
+
+    <div style="text-align:center;font-size:10px;color:var(--t-3);margin-top:16px;padding-top:14px;border-top:1px solid var(--line)">
+      Sudah punya akun? <a href="app.html#pg-login" style="color:var(--g);text-decoration:none;font-weight:600">Login ke Panel &rarr;</a>
+    </div>
+  </div>
+</div>
+
 <script>
+  // ===== BUY MODAL =====
+  function openBuyModal(){
+    const m = document.getElementById('buy-modal');
+    if(m){m.classList.add('show'); document.body.style.overflow='hidden';}
+  }
+  function closeBuyModal(){
+    const m = document.getElementById('buy-modal');
+    if(m){m.classList.remove('show'); document.body.style.overflow='';}
+  }
+  function selectPkg(el){
+    document.querySelectorAll('.buy-pkg').forEach(p=>p.classList.remove('active'));
+    el.classList.add('active');
+    // Update telegram link with pre-filled message
+    const pkg = el.getAttribute('data-pkg');
+    const msg = encodeURIComponent(`Halo, saya tertarik membeli LP Algo 7.6 paket ${pkg}. Mohon info lebih lanjut.`);
+    const btn = document.getElementById('buy-tg-btn');
+    if(btn) btn.href = `https://t.me/Ladangpertanian?text=${msg}`;
+  }
+  // Initialize default selected package telegram link
+  document.addEventListener('DOMContentLoaded', () => {
+    const def = document.querySelector('.buy-pkg.active');
+    if(def) selectPkg(def);
+  });
+  // Close on escape
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') closeBuyModal();
+  });
+
   // Nav scroll
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
