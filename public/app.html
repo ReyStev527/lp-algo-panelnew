@@ -1332,7 +1332,7 @@ function enterDashboard() {
 
   fetchStatus();
   if (pollTimer) clearInterval(pollTimer);
-  pollTimer = setInterval(fetchStatus, 5000);
+  pollTimer = setInterval(fetchStatus, 2000); // v7.6.1: 5000→2000 untuk respons cepat
 }
 
 async function loadReferralStats() {
@@ -1462,13 +1462,14 @@ async function togglePower() {
   if (eaOn && !confirm('Yakin matikan EA?')) return;
   await fbSet(`commands/${currentUser.account_id}`, { command: cmd, time: Date.now() });
   toast('Command: ' + cmd);
-  setTimeout(fetchStatus, 1500);
+  setTimeout(fetchStatus, 2500); // v7.6.1: 1500→2500ms (wait 1 EA poll cycle + buffer)
 }
 
 async function sendCmd(cmd) {
   if (!confirm('Yakin ' + cmd + '?')) return;
   await fbSet(`commands/${currentUser.account_id}`, { command: cmd, time: Date.now() });
   toast('Command: ' + cmd);
+  setTimeout(fetchStatus, 2500); // v7.6.1: refresh status setelah EA process
 }
 
 async function saveSettings() {
@@ -1510,6 +1511,7 @@ async function saveSettings() {
   };
   await fbSet(`commands/${currentUser.account_id}`, settings);
   toast('Settings disimpan!');
+  setTimeout(fetchStatus, 2500); // v7.6.1: refresh setelah EA apply settings
 }
 
 // =============================================
