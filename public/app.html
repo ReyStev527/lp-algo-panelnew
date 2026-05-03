@@ -622,6 +622,7 @@ input:focus,select:focus{border-color:var(--g)}
         <div class="plbl on" id="p-lbl">EA ONLINE</div>
         <div class="badges">
           <span class="badge on" id="s-badge">ONLINE</span>
+          <span class="badge inf" id="fb-conn" style="font-size:7px">⚡ REALTIME</span>
           <span class="badge inf" id="s-symbol">-</span>
           <span class="badge inf" id="s-spread">SPR: -</span>
         </div>
@@ -982,6 +983,71 @@ const REG_MASTER_KEY = 'LPALGO'; // Prefix kode registrasi
 let currentUser = null; // {account_id, name, role, license_start, license_end}
 let eaOn = true;
 let pollTimer = null;
+let sseSource = null; // SSE EventSource untuk realtime update
+let adminSSE = null;  // SSE untuk admin Live PnL
+
+// =============================================
+// SSE REALTIME LISTENER (Firebase RTDB)
+// EA update status → Firebase push INSTANT ke panel
+// =============================================
+function startSSEListener(accountId) {
+  if (sseSource) { sseSource.close(); sseSource = null; }
+  
+  let sseDebounce = null;
+  function onSSEData() {
+    // Debounce: EA bisa update beberapa field sekaligus, tunggu 300ms
+    if (sseDebounce) clearTimeout(sseDebounce);
+    sseDebounce = setTimeout(() => fetchStatus(), 300);
+  }
+  
+  const sseUrl = `${FB_URL}/ea_status/${accountId}.json`;
+  sseSource = new EventSource(sseUrl);
+  
+  sseSource.addEventListener('put', function(e) {
+    onSSEData();
+    updateConnBadge(true);
+  });
+  
+  sseSource.addEventListener('patch', function(e) {
+    onSSEData();
+    updateConnBadge(true);
+  });
+  
+  sseSource.onerror = function(err) {
+    console.warn('[SSE] Connection lost, reconnecting in 5s...');
+    updateConnBadge(false);
+    if (sseSource) sseSource.close();
+    sseSource = null;
+    setTimeout(() => {
+      if (currentUser) startSSEListener(currentUser.account_id);
+    }, 5000);
+  };
+  
+  updateConnBadge(true);
+  console.log('[SSE] Realtime listener active for:', accountId);
+}
+
+function stopSSEListener() {
+  if (sseSource) { sseSource.close(); sseSource = null; }
+  updateConnBadge(false);
+}
+
+// Update connection indicator badge
+function updateConnBadge(connected) {
+  const el = document.getElementById('fb-conn');
+  if (!el) return;
+  if (connected) {
+    el.textContent = '⚡ REALTIME';
+    el.style.background = 'rgba(0,200,120,.15)';
+    el.style.color = 'var(--g)';
+    el.style.border = '1px solid rgba(0,200,120,.3)';
+  } else {
+    el.textContent = '⏳ POLLING';
+    el.style.background = 'rgba(255,180,0,.15)';
+    el.style.color = '#FFB400';
+    el.style.border = '1px solid rgba(255,180,0,.3)';
+  }
+}
 
 // =============================================
 // FIREBASE REST API HELPERS
@@ -1173,6 +1239,7 @@ async function doLogin() {
     currentUser = { account_id: 'admin', name: 'Administrator', role: 'admin' };
     showPage('pg-admin');
     loadClients();
+    startAdminSSE();
     return;
   }
 
@@ -1194,6 +1261,8 @@ function doLogout() {
   currentUser = null;
   localStorage.removeItem('lp_session');
   if (pollTimer) clearInterval(pollTimer);
+  stopSSEListener();
+  if (typeof adminSSE !== 'undefined' && adminSSE) { adminSSE.close(); adminSSE = null; }
   showPage('pg-login');
   document.getElementById('l-acc').value = '';
   document.getElementById('l-pwd').value = '';
@@ -1205,7 +1274,7 @@ function doLogout() {
   if (s) {
     try {
       currentUser = JSON.parse(s);
-      if (currentUser.role === 'admin') { showPage('pg-admin'); loadClients(); }
+      if (currentUser.role === 'admin') { showPage('pg-admin'); loadClients(); startAdminSSE(); }
       else enterDashboard();
     } catch {}
   }
@@ -1335,7 +1404,10 @@ function enterDashboard() {
 
   fetchStatus();
   if (pollTimer) clearInterval(pollTimer);
-  pollTimer = setInterval(fetchStatus, 2000); // v7.7.1: 5000→2000 untuk respons cepat
+  // === SSE Realtime Listener (instant push dari Firebase) ===
+  startSSEListener(currentUser.account_id);
+  // Fallback polling tiap 10 detik (jaga-jaga SSE disconnect)
+  pollTimer = setInterval(fetchStatus, 10000);
 }
 
 async function loadReferralStats() {
@@ -1735,9 +1807,30 @@ async function loadLivePnL() {
   }
 }
 
-// Load P&L on page load + auto refresh every 15 seconds
+// Load P&L on page load + SSE realtime for admin
 loadLivePnL();
-setInterval(loadLivePnL, 15000);
+function startAdminSSE() {
+  if (adminSSE) { adminSSE.close(); adminSSE = null; }
+  adminSSE = new EventSource(`${FB_URL}/ea_status.json`);
+  let adminDebounce = null;
+  adminSSE.addEventListener('put', function() {
+    if (adminDebounce) clearTimeout(adminDebounce);
+    adminDebounce = setTimeout(loadLivePnL, 500);
+  });
+  adminSSE.addEventListener('patch', function() {
+    if (adminDebounce) clearTimeout(adminDebounce);
+    adminDebounce = setTimeout(loadLivePnL, 500);
+  });
+  adminSSE.onerror = function() {
+    if (adminSSE) adminSSE.close();
+    adminSSE = null;
+    setTimeout(startAdminSSE, 5000);
+  };
+}
+// Fallback polling tiap 30 detik (jaga-jaga SSE mati)
+setInterval(loadLivePnL, 30000);
+// Start SSE jika admin login
+if (currentUser && currentUser.role === 'admin') startAdminSSE();
 
 // =============================================
 // TESTIMONI — Load from Firebase
