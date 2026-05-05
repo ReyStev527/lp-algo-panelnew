@@ -671,11 +671,14 @@ input:focus,select:focus{border-color:var(--g)}
 
     <!-- SETTINGS -->
     <div id="dt-settings" style="display:none">
-      <div class="card"><div class="title">MONEY MANAGEMENT</div>
+      <div class="card"><div class="title">MONEY MANAGEMENT & S2</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Main Lot</span><input type="number" id="st-ml" step="0.01" value="0.02" style="width:75px;text-align:right"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Cut Loss ($)</span><input type="number" id="st-cl" step="10" value="0" style="width:75px;text-align:right"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Grid Pips</span><input type="number" id="st-gp" step="0.5" value="9.0" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Entry Per Step</span><input type="number" id="st-eps" step="1" min="1" value="8" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Entry Per Step</span><input type="number" id="st-eps" step="1" min="1" value="8" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S2 Lot</span><input type="number" id="st-rl" step="0.01" value="0.02" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S2 Max Entry</span><input type="number" id="st-rm" step="1" value="70" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">S2 Lot Skip</span><input type="number" id="st-rls" step="1" min="0" value="0" style="width:75px;text-align:right"></div>
       </div>
       <div class="card"><div class="title">TRAILING SL</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Trail SL Pips</span><input type="number" id="st-tslp" step="0.5" value="10.0" style="width:75px;text-align:right"></div>
@@ -692,28 +695,6 @@ input:focus,select:focus{border-color:var(--g)}
       <div class="card"><div class="title">AUTO-RESTART</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Auto-Restart</span><select id="st-ar" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="0">OFF</option><option value="1">ON</option></select></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Cooldown (menit)</span><input type="number" id="st-cd" step="1" min="1" value="2" style="width:75px;text-align:right"></div>
-      </div>
-      <div class="card"><div class="title">S2 MODULE</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S2 Lot</span><input type="number" id="st-rl" step="0.01" value="0.02" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S2 Max Entry</span><input type="number" id="st-rm" step="1" value="70" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">S2 Lot Skip</span><input type="number" id="st-rls" step="1" min="0" value="0" style="width:75px;text-align:right"></div>
-      </div>
-      <div class="card"><div class="title">S3 MODULE</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 Module</span><select id="st-mron" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 Lot</span><input type="number" id="st-mrl" step="0.01" value="0.10" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 Lot Step</span><input type="number" id="st-mrls" step="0.01" value="0.01" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 Grid Pips</span><input type="number" id="st-mrgp" step="0.5" value="15.0" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 TP1 Pips</span><input type="number" id="st-mrtp1" step="1" value="30" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S3 TP Multi Pips</span><input type="number" id="st-mrtpm" step="0.5" value="3.0" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">S3 Max Entry</span><input type="number" id="st-mrm" step="1" value="15" style="width:75px;text-align:right"></div>
-      </div>
-      <div class="card"><div class="title" style="color:var(--go)">S4 MODULE</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S4 Module</span><select id="st-s4on" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S4 Lot</span><input type="number" id="st-s4lot" step="0.01" value="0.01" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S4 Cut Loss ($)</span><input type="number" id="st-s4cl" step="10" value="1490" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S4 Trail Activate ($)</span><input type="number" id="st-s4ta" step="100" value="3000" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S4 Trail Pips</span><input type="number" id="st-s4tp" step="0.5" value="5.0" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">S4 Reversal</span><select id="st-s4rev" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
       </div>
       <div class="card"><div class="title">SESSION TIME (WIB)</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">EA OFF jam (WIB)</span><input type="number" id="st-offh" step="1" min="0" max="23" value="3" style="width:75px;text-align:right"></div>
@@ -1494,13 +1475,6 @@ async function fetchStatus() {
       document.getElementById('st-cd').value = data.settings.cooldown_min || 2;
       document.getElementById('st-rl').value = data.settings.rsi_lot || 0.02;
       document.getElementById('st-rm').value = data.settings.rsi_max_entry || 70;
-      document.getElementById('st-mron').value = data.settings.mr_entry_on !== undefined ? data.settings.mr_entry_on : 1;
-      document.getElementById('st-mrl').value = data.settings.mr_lot || 0.10;
-      document.getElementById('st-mrls').value = data.settings.mr_lot_step || 0.01;
-      document.getElementById('st-mrgp').value = data.settings.mr_grid_pips || 15;
-      document.getElementById('st-mrtp1').value = data.settings.mr_tp1_pips || 30;
-      document.getElementById('st-mrtpm').value = data.settings.mr_tp_multi || 3;
-      document.getElementById('st-mrm').value = data.settings.mr_max_entry || 15;
       document.getElementById('st-offh').value = data.settings.ea_off_hour || 3;
       document.getElementById('st-onh').value = data.settings.ea_on_hour || 6;
       document.getElementById('st-tslp').value = data.settings.trail_sl_pips || 10.0;
@@ -1509,13 +1483,6 @@ async function fetchStatus() {
       document.getElementById('st-gb').value = data.settings.gold_before || 10;
       document.getElementById('st-ga').value = data.settings.gold_after || 10;
       document.getElementById('st-rls').value = data.settings.rsi_lot_skip || 0;
-      // S4 Module
-      document.getElementById('st-s4on').value = data.settings.s4_on != null ? data.settings.s4_on : 1;
-      document.getElementById('st-s4lot').value = data.settings.s4_lot || 0.01;
-      document.getElementById('st-s4cl').value = data.settings.s4_cl || 1490;
-      document.getElementById('st-s4ta').value = data.settings.s4_trail_activate || 3000;
-      document.getElementById('st-s4tp').value = data.settings.s4_trail_pips || 5.0;
-      document.getElementById('st-s4rev').value = data.settings.s4_reverse != null ? data.settings.s4_reverse : 1;
     }
 
     // Logs
@@ -1561,13 +1528,6 @@ async function saveSettings() {
     cooldown_min: parseInt(document.getElementById('st-cd').value) || 2,
     rsi_lot: parseFloat(document.getElementById('st-rl').value) || 0.02,
     rsi_max_entry: parseInt(document.getElementById('st-rm').value) || 70,
-    mr_entry_on: parseInt(document.getElementById('st-mron').value),
-    mr_lot: parseFloat(document.getElementById('st-mrl').value) || 0.10,
-    mr_lot_step: parseFloat(document.getElementById('st-mrls').value) || 0.01,
-    mr_grid_pips: parseFloat(document.getElementById('st-mrgp').value) || 15,
-    mr_tp1_pips: parseFloat(document.getElementById('st-mrtp1').value) || 30,
-    mr_tp_multi: parseFloat(document.getElementById('st-mrtpm').value) || 3,
-    mr_max_entry: parseInt(document.getElementById('st-mrm').value) || 15,
     ea_off_hour: parseInt(document.getElementById('st-offh').value) || 3,
     ea_on_hour: parseInt(document.getElementById('st-onh').value) || 6,
     trail_sl_pips: parseFloat(document.getElementById('st-tslp').value) || 10.0,
@@ -1576,12 +1536,6 @@ async function saveSettings() {
     gold_before: parseInt(document.getElementById('st-gb').value) || 10,
     gold_after: parseInt(document.getElementById('st-ga').value) || 10,
     rsi_lot_skip: parseInt(document.getElementById('st-rls').value) || 0,
-    s4_on: parseInt(document.getElementById('st-s4on').value),
-    s4_lot: parseFloat(document.getElementById('st-s4lot').value) || 0.01,
-    s4_cl: parseFloat(document.getElementById('st-s4cl').value) || 1490,
-    s4_trail_activate: parseFloat(document.getElementById('st-s4ta').value) || 3000,
-    s4_trail_pips: parseFloat(document.getElementById('st-s4tp').value) || 5.0,
-    s4_reverse: parseInt(document.getElementById('st-s4rev').value),
     time: Date.now()
   };
   await fbSet(`commands/${currentUser.account_id}`, settings);
