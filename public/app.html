@@ -693,10 +693,6 @@ input:focus,select:focus{border-color:var(--g)}
             ✅ Setting <strong id="preset-name"></strong> diterapkan
           </div>
         </div>
-        <div id="preset-detail" style="display:none;border-top:1px solid rgba(30,45,61,.5);padding-top:8px;margin-top:4px">
-          <div style="font-size:10px;color:var(--t3);margin-bottom:6px">Detail setting:</div>
-          <div id="preset-info" style="font-size:10px;color:var(--t2);line-height:1.8"></div>
-        </div>
       </div>
       <!-- Hidden inputs untuk nilai setting (tetap dibutuhkan JS) -->
       <div style="display:none">
@@ -1576,13 +1572,6 @@ function applyPreset(modal) {
   // Show confirmation
   document.getElementById('preset-active').style.display = 'block';
   document.getElementById('preset-name').textContent = p.name;
-  
-  // Show detail
-  document.getElementById('preset-detail').style.display = 'block';
-  document.getElementById('preset-info').innerHTML = 
-    'Main Lot: ' + p.ml + ' · Grid: ' + p.gp + ' pips · Step: ' + p.eps +
-    '<br>S2 Lot: ' + p.rl + ' · Max Entry: ' + p.rm + ' · Skip: ' + p.rls +
-    '<br>Trail SL: ' + p.tslp + ' pips · Min Profit: ×' + p.tslm;
   
   // Auto save
   saveSettings();
