@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lp-algo-v7-6';
+const CACHE_NAME = 'lp-algo-v7-9';
 const ASSETS = ['/', '/index.html', '/app.html', '/manifest.json'];
 
 self.addEventListener('install', e => {
