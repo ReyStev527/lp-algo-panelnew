@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lp-algo-v7-9';
+const CACHE_NAME = 'lp-algo-v8-0-sb';
 const ASSETS = ['/', '/index.html', '/app.html', '/manifest.json'];
 
 self.addEventListener('install', e => {
@@ -16,6 +16,7 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  if (e.request.url.includes('supabase.co')) return;
   if (e.request.url.includes('firebasedatabase.app')) return;
   e.respondWith(
     fetch(e.request).catch(() => caches.match(e.request))
