@@ -964,81 +964,72 @@ input:focus,select:focus{border-color:var(--g)}
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // =============================================
-// KONFIGURASI FIREBASE — GANTI DENGAN MILIK ANDA
+// KONFIGURASI SUPABASE — GANTI DENGAN MILIK ANDA
 // =============================================
-const FB_URL = 'https://lp-algo-panel-default-rtdb.asia-southeast1.firebasedatabase.app';
+const SUPABASE_URL = 'https://nrmfgdmoljcuhhiobtj.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ybWZnZG1vbGpjdWhoaW9ianRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2Njk0NTQsImV4cCI6MjA5NTI0NTQ1NH0.F2SlNUT4L7UiFImmgL4qSXTxhl6bF23tC7V8olzkFU0';
 const LICENSE_SECRET = 'LP@2025#Algo$Sec!K9vX7zR4mW';  // Harus sama dengan EA
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 function generateLicenseHash(accountId, licenseEnd) {
   const raw = accountId + '|' + licenseEnd + '|' + LICENSE_SECRET;
   let hash = BigInt(5381);
   for (let i = 0; i < raw.length; i++) {
     hash = ((hash << BigInt(5)) + hash) + BigInt(raw.charCodeAt(i));
-    hash = hash & BigInt('0xFFFFFFFFFFFFFFFF');  // Keep 64-bit
+    hash = hash & BigInt('0xFFFFFFFFFFFFFFFF');
   }
   return hash.toString(16).toUpperCase().padStart(16, '0');
 }
-const ADMIN_PASSWORD = 'admin2025lpalgo'; // Password admin
-const REG_MASTER_KEY = 'LPALGO'; // Prefix kode registrasi
+const ADMIN_PASSWORD = 'admin2025lpalgo';
+const REG_MASTER_KEY = 'LPALGO';
 
 // =============================================
 // STATE
 // =============================================
-let currentUser = null; // {account_id, name, role, license_start, license_end}
+let currentUser = null;
 let eaOn = true;
 let pollTimer = null;
-let sseSource = null; // SSE EventSource untuk realtime update
-let adminSSE = null;  // SSE untuk admin Live PnL
+let sseChannel = null;    // Supabase Realtime channel (Supabase Realtime)
+let adminChannel = null;  // Supabase Realtime for admin
 
 // =============================================
-// SSE REALTIME LISTENER (Firebase RTDB)
-// EA update status → Firebase push INSTANT ke panel
+// SUPABASE REALTIME LISTENER (Supabase Realtime)
 // =============================================
 function startSSEListener(accountId) {
-  if (sseSource) { sseSource.close(); sseSource = null; }
+  if (sseChannel) { sb.removeChannel(sseChannel); sseChannel = null; }
   
-  let sseDebounce = null;
-  function onSSEData() {
-    // Debounce: EA bisa update beberapa field sekaligus, tunggu 300ms
-    if (sseDebounce) clearTimeout(sseDebounce);
-    sseDebounce = setTimeout(() => fetchStatus(), 300);
+  let debounce = null;
+  function onUpdate() {
+    if (debounce) clearTimeout(debounce);
+    debounce = setTimeout(() => fetchStatus(), 300);
   }
   
-  const sseUrl = `${FB_URL}/ea_status/${accountId}.json`;
-  sseSource = new EventSource(sseUrl);
-  
-  sseSource.addEventListener('put', function(e) {
-    onSSEData();
-    updateConnBadge(true);
-  });
-  
-  sseSource.addEventListener('patch', function(e) {
-    onSSEData();
-    updateConnBadge(true);
-  });
-  
-  sseSource.onerror = function(err) {
-    console.warn('[SSE] Connection lost, reconnecting in 5s...');
-    updateConnBadge(false);
-    if (sseSource) sseSource.close();
-    sseSource = null;
-    setTimeout(() => {
-      if (currentUser) startSSEListener(currentUser.account_id);
-    }, 5000);
-  };
-  
-  updateConnBadge(true);
-  console.log('[SSE] Realtime listener active for:', accountId);
+  sseChannel = sb.channel('ea_status_' + accountId)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'ea_status', filter: 'account_id=eq.' + accountId }, () => {
+      onUpdate();
+      updateConnBadge(true);
+    })
+    .subscribe((status) => {
+      if (status === 'SUBSCRIBED') {
+        updateConnBadge(true);
+        console.log('[RT] Realtime listener active for:', accountId);
+      } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+        updateConnBadge(false);
+        console.warn('[RT] Connection error, retrying in 5s...');
+        setTimeout(() => { if (currentUser) startSSEListener(currentUser.account_id); }, 5000);
+      }
+    });
 }
 
 function stopSSEListener() {
-  if (sseSource) { sseSource.close(); sseSource = null; }
+  if (sseChannel) { sb.removeChannel(sseChannel); sseChannel = null; }
   updateConnBadge(false);
 }
 
-// Update connection indicator badge
 function updateConnBadge(connected) {
   const el = document.getElementById('fb-conn');
   if (!el) return;
@@ -1056,20 +1047,110 @@ function updateConnBadge(connected) {
 }
 
 // =============================================
-// FIREBASE REST API HELPERS
+// SUPABASE API HELPERS (kompatibel dengan Firebase path format)
+// fbGet('clients/257413032') → single row
+// fbGet('clients') → all rows as {key: row, ...} object
 // =============================================
+function _getPK(table) {
+  if (table === 'reg_codes') return 'code';
+  if (table === 'settings') return 'key';
+  if (table === 'testimonials') return 'id';
+  if (table === 'protection_log') return 'id';
+  return 'account_id';
+}
+
 async function fbGet(path) {
-  const res = await fetch(`${FB_URL}/${path}.json`);
-  return res.json();
+  const parts = path.split('/');
+  const table = parts[0];
+  
+  if (parts.length >= 2) {
+    const id = parts[1];
+    const pk = _getPK(table);
+    
+    // Special case: settings/{key} → return just the value
+    if (table === 'settings') {
+      const { data } = await sb.from(table).select('value').eq('key', id).single();
+      if (data && data.value !== undefined) {
+        const v = data.value;
+        return isNaN(v) ? v : Number(v);
+      }
+      return null;
+    }
+    
+    const { data } = await sb.from(table).select('*').eq(pk, id).single();
+    return data || null;
+  }
+  
+  // Get all rows → return as {key: row} object (Supabase wrapper compat)
+  const { data } = await sb.from(table).select('*');
+  if (!data || data.length === 0) return null;
+  
+  const pk = _getPK(table);
+  const obj = {};
+  data.forEach(row => { obj[row[pk]] = row; });
+  return obj;
 }
+
 async function fbSet(path, data) {
-  await fetch(`${FB_URL}/${path}.json`, { method: 'PUT', body: JSON.stringify(data) });
+  const parts = path.split('/');
+  const table = parts[0];
+  
+  if (table === 'settings' && parts.length >= 2) {
+    // fbSet('settings/lifetime_stock', 10) → upsert key-value
+    await sb.from('settings').upsert({ key: parts[1], value: String(data) });
+    return;
+  }
+  
+  if (table === 'protection_log' && parts.length >= 3) {
+    // fbSet('protection_log/accId/logId', obj) → insert with account_id
+    await sb.from('protection_log').insert({ ...data, account_id: parts[1] });
+    return;
+  }
+  
+  if (table === 'testimonials' && parts.length >= 2) {
+    await sb.from('testimonials').upsert({ id: parts[1], ...data });
+    return;
+  }
+  
+  if (table === 'reg_codes' && parts.length >= 2) {
+    await sb.from('reg_codes').upsert({ code: parts[1], ...data });
+    return;
+  }
+  
+  if (table === 'commands' && parts.length >= 2) {
+    await sb.from('commands').upsert({ account_id: parts[1], ...data });
+    return;
+  }
+  
+  if (parts.length >= 2) {
+    const pk = _getPK(table);
+    await sb.from(table).upsert({ [pk]: parts[1], ...data });
+    return;
+  }
+  
+  await sb.from(table).upsert(data);
 }
+
 async function fbUpdate(path, data) {
-  await fetch(`${FB_URL}/${path}.json`, { method: 'PATCH', body: JSON.stringify(data) });
+  const parts = path.split('/');
+  const table = parts[0];
+  if (parts.length >= 2) {
+    const pk = _getPK(table);
+    await sb.from(table).update(data).eq(pk, parts[1]);
+    return;
+  }
+  await sb.from(table).update(data);
 }
+
 async function fbDelete(path) {
-  await fetch(`${FB_URL}/${path}.json`, { method: 'DELETE' });
+  const parts = path.split('/');
+  const table = parts[0];
+  if (parts.length >= 2) {
+    const pk = _getPK(table);
+    await sb.from(table).delete().eq(pk, parts[1]);
+    return;
+  }
+  await sb.from(table).delete();
 }
 
 // =============================================
@@ -1268,7 +1349,7 @@ function doLogout() {
   localStorage.removeItem('lp_session');
   if (pollTimer) clearInterval(pollTimer);
   stopSSEListener();
-  if (typeof adminSSE !== 'undefined' && adminSSE) { adminSSE.close(); adminSSE = null; }
+  if (typeof adminChannel !== 'undefined' && adminChannel) { sb.removeChannel(adminChannel); adminChannel = null; }
   showPage('pg-login');
   document.getElementById('l-acc').value = '';
   document.getElementById('l-pwd').value = '';
@@ -1410,7 +1491,7 @@ function enterDashboard() {
 
   fetchStatus();
   if (pollTimer) clearInterval(pollTimer);
-  // === SSE Realtime Listener (instant push dari Firebase) ===
+  // === SSE Realtime Listener (instant push via Supabase Realtime) ===
   startSSEListener(currentUser.account_id);
   // Fallback polling tiap 10 detik (jaga-jaga SSE disconnect)
   pollTimer = setInterval(fetchStatus, 10000);
@@ -1627,7 +1708,7 @@ function applyPreset(modal) {
   document.getElementById('preset-active').style.display = 'block';
   document.getElementById('preset-name').textContent = p.name;
   
-  // Auto save to Firebase
+  // Auto save to Supabase
   saveSettings();
 }
 
@@ -1805,7 +1886,7 @@ function selectPackage(pkg, price, desc) {
   showPage('pg-payment');
 }
 
-// Load lifetime stock count from Firebase
+// Load lifetime stock from Supabase
 async function loadStock() {
   try {
     const stock = await fbGet('settings/lifetime_stock');
@@ -1871,22 +1952,14 @@ async function loadLivePnL() {
 // Load P&L on page load + SSE realtime for admin
 loadLivePnL();
 function startAdminSSE() {
-  if (adminSSE) { adminSSE.close(); adminSSE = null; }
-  adminSSE = new EventSource(`${FB_URL}/ea_status.json`);
+  if (adminChannel) { sb.removeChannel(adminChannel); adminChannel = null; }
   let adminDebounce = null;
-  adminSSE.addEventListener('put', function() {
-    if (adminDebounce) clearTimeout(adminDebounce);
-    adminDebounce = setTimeout(loadLivePnL, 500);
-  });
-  adminSSE.addEventListener('patch', function() {
-    if (adminDebounce) clearTimeout(adminDebounce);
-    adminDebounce = setTimeout(loadLivePnL, 500);
-  });
-  adminSSE.onerror = function() {
-    if (adminSSE) adminSSE.close();
-    adminSSE = null;
-    setTimeout(startAdminSSE, 5000);
-  };
+  adminChannel = sb.channel('admin_ea_status')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'ea_status' }, () => {
+      if (adminDebounce) clearTimeout(adminDebounce);
+      adminDebounce = setTimeout(loadLivePnL, 500);
+    })
+    .subscribe();
 }
 // Fallback polling tiap 30 detik (jaga-jaga SSE mati)
 setInterval(loadLivePnL, 30000);
@@ -1894,7 +1967,7 @@ setInterval(loadLivePnL, 30000);
 if (currentUser && currentUser.role === 'admin') startAdminSSE();
 
 // =============================================
-// TESTIMONI — Load from Firebase
+// TESTIMONI — Load from Supabase
 // =============================================
 async function loadTestimoni() {
   try {
