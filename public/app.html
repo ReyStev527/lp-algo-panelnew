@@ -418,10 +418,10 @@ input:focus,select:focus{border-color:var(--g)}
     <div style="font-size:11px;color:var(--t2);margin:8px 0 12px;line-height:1.8">
       <div>Durasi: <strong style="color:var(--t)">30 hari</strong></div>
       <div>Akun trading: <strong style="color:var(--t)">1 akun</strong></div>
+      <div>Free VPS: <strong style="color:var(--g)">1×</strong></div>
       <div>Remote control panel</div>
       <div>Update EA gratis selama aktif</div>
       <div>Support via Telegram</div>
-      <div>Proteksi otomatis (loss/MC)</div>
     </div>
     <button class="btn" onclick="selectPackage('1bulan','Rp 1.500.000','30 Hari — 1 Akun')">PILIH PAKET INI</button>
   </div>
@@ -434,36 +434,51 @@ input:focus,select:focus{border-color:var(--g)}
     <div style="font-size:10px;color:var(--t3);text-decoration:line-through">Rp 3.500.000</div>
     <div style="font-size:11px;color:var(--t2);margin:8px 0 12px;line-height:1.8">
       <div>Durasi: <strong style="color:var(--t)">90 hari</strong></div>
-      <div>Akun trading: <strong style="color:var(--t)">3 akun</strong></div>
+      <div>Akun trading: <strong style="color:var(--t)">2 akun</strong></div>
+      <div>Free VPS: <strong style="color:var(--b)">1 bulan</strong></div>
       <div>Remote control panel</div>
       <div>Update EA gratis selama aktif</div>
       <div>Support prioritas via Telegram</div>
-      <div>Proteksi otomatis (loss/MC)</div>
       <div style="color:var(--b)">Hemat Rp 500.000!</div>
     </div>
-    <button class="btn blue" onclick="selectPackage('3bulan','Rp 3.000.000','90 Hari — 3 Akun')">PILIH PAKET INI</button>
+    <button class="btn blue" onclick="selectPackage('3bulan','Rp 3.000.000','90 Hari — 2 Akun')">PILIH PAKET INI</button>
+  </div>
+
+  <!-- Paket 6 Bulan -->
+  <div class="card" style="border-color:var(--t);position:relative;overflow:hidden">
+    <div style="font-family:var(--d);font-size:11px;color:var(--t);letter-spacing:2px;margin-bottom:8px">PAKET 6 BULAN</div>
+    <div style="font-family:var(--d);font-size:28px;font-weight:800;color:var(--t)">Rp 5.000.000</div>
+    <div style="font-size:11px;color:var(--t2);margin:8px 0 12px;line-height:1.8">
+      <div>Durasi: <strong style="color:var(--t)">180 hari</strong></div>
+      <div>Akun trading: <strong style="color:var(--t)">3 akun</strong></div>
+      <div>Free VPS: <strong style="color:var(--t)">2 bulan</strong></div>
+      <div>Remote control panel</div>
+      <div>Update EA gratis selama aktif</div>
+      <div>Support prioritas via Telegram</div>
+    </div>
+    <button class="btn" onclick="selectPackage('6bulan','Rp 5.000.000','180 Hari — 3 Akun')">PILIH PAKET INI</button>
   </div>
 
   <!-- Paket Lifetime -->
   <div class="card" style="border-color:var(--go);position:relative;overflow:hidden">
     <div style="position:absolute;top:10px;right:-25px;background:var(--go);color:#000;font-size:8px;font-weight:700;padding:3px 30px;transform:rotate(45deg);letter-spacing:1px">TERBAIK</div>
     <div style="font-family:var(--d);font-size:11px;color:var(--go);letter-spacing:2px;margin-bottom:8px">PAKET LIFETIME</div>
-    <div style="font-family:var(--d);font-size:28px;font-weight:800;color:var(--go)">Rp 6.000.000</div>
+    <div style="font-family:var(--d);font-size:28px;font-weight:800;color:var(--go)">Rp 10.000.000</div>
     <div style="font-size:11px;color:var(--t2);margin:8px 0 12px;line-height:1.8">
       <div>Durasi: <strong style="color:var(--go)">PERMANEN / SELAMANYA</strong></div>
       <div>Akun trading: <strong style="color:var(--t)">5 akun</strong></div>
+      <div>Free VPS: <strong style="color:var(--go)">2 bulan</strong></div>
       <div>Remote control panel</div>
       <div>Update EA gratis selamanya</div>
       <div>Support VIP via Telegram</div>
       <div>Prioritas fitur baru</div>
-      <div>Proteksi otomatis (loss/MC)</div>
     </div>
     <div style="background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);border-radius:8px;padding:8px;text-align:center;margin-bottom:12px">
       <div style="font-size:9px;color:var(--t3);letter-spacing:1px">SISA STOCK</div>
       <div style="font-family:var(--d);font-size:22px;font-weight:800;color:var(--r)" id="stock-count">10</div>
       <div style="font-size:9px;color:var(--r)">Terbatas! Tidak akan ditambah.</div>
     </div>
-    <button class="btn" style="background:rgba(255,215,0,.15);border-color:var(--go);color:var(--go)" onclick="selectPackage('lifetime','Rp 6.000.000','LIFETIME — 5 Akun')">PILIH PAKET INI</button>
+    <button class="btn" style="background:rgba(255,215,0,.15);border-color:var(--go);color:var(--go)" onclick="selectPackage('lifetime','Rp 10.000.000','LIFETIME — 5 Akun')">PILIH PAKET INI</button>
   </div>
 
   <div style="text-align:center;margin-top:10px">
@@ -1064,7 +1079,14 @@ function _getPK(table) {
 function _ck(error, ctx) {
   if (error) {
     console.error('[SUPABASE]', ctx, error);
-    throw new Error('[' + ctx + '] ' + (error.message || error.code || 'gagal menulis ke Supabase'));
+    // Supabase error object: { message, code, details, hint }
+    var parts = [];
+    if (error.message) parts.push(error.message);
+    if (error.code)    parts.push('code=' + error.code);
+    if (error.details) parts.push(error.details);
+    if (error.hint)    parts.push('hint: ' + error.hint);
+    var msg = parts.length ? parts.join(' | ') : JSON.stringify(error);
+    throw new Error('[' + ctx + '] ' + msg);
   }
 }
 
@@ -2126,9 +2148,13 @@ async function deleteTestimoni(id) {
 async function updateStock() {
   const val = parseInt(document.getElementById('a-stock').value);
   if (isNaN(val) || val < 0) return;
-  await fbSet('settings/lifetime_stock', val);
-  document.getElementById('stock-count').textContent = val;
-  toast('Stock lifetime diupdate: ' + val);
+  try {
+    await fbSet('settings/lifetime_stock', val);
+    document.getElementById('stock-count').textContent = val;
+    toast('Stock lifetime diupdate: ' + val);
+  } catch (e) {
+    toast('Gagal update stock: ' + e.message, true);
+  }
 }
 
 // Referral URL detection: auto-go to register if ?ref= present
