@@ -2258,13 +2258,29 @@ async function addClientManual() {
     const allClients = await fbGet('clients') || {};
     const no = Object.keys(allClients).length + 1;
 
-    await fbSet(`clients/${acc}`, {
+    // Record dasar — kolom yang pasti ada di tabel clients
+    const baseRec = {
       no, name, account_id: acc, password,
       license_start: start, license_end: end, license_hash: generateLicenseHash(acc, end),
-      status: 'active', registered_at: new Date().toISOString(),
+      status: 'active', registered_at: new Date().toISOString()
+    };
+    // Tambahan info penambah (butuh kolom added_by & added_by_role — utk label MOD di panel admin)
+    const auditRec = Object.assign({}, baseRec, {
       added_by_role: (currentUser && currentUser.role) || 'admin',
       added_by: (currentUser && currentUser.name) || 'Administrator'
     });
+
+    // Coba simpan lengkap; bila kolom audit belum ada di Supabase, simpan tanpa itu (anti-blokir)
+    try {
+      await fbSet(`clients/${acc}`, auditRec);
+    } catch (e) {
+      const msg = (e && e.message) || '';
+      if (/added_by|PGRST204|schema cache/i.test(msg)) {
+        await fbSet(`clients/${acc}`, baseRec);   // fallback: tabel belum punya kolom audit
+      } else {
+        throw e;
+      }
+    }
 
     // Verifikasi baris benar-benar tersimpan (anti gagal-diam)
     const saved = await fbGet(`clients/${acc}`);
