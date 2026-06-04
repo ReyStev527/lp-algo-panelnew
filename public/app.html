@@ -74,6 +74,11 @@ input:focus,select:focus{border-color:var(--g)}
 .mv-opt{display:block;width:100%;text-align:left;background:var(--bg3);border:1px solid var(--bd);color:var(--t);padding:10px 12px;border-radius:8px;margin-bottom:6px;cursor:pointer;font-family:inherit;font-size:12px}
 .mv-opt:hover{border-color:var(--g);background:rgba(0,255,136,.08)}
 .mv-opt .c{color:var(--t3);font-size:10px;float:right}
+.sel-chk,.grp-chk,#chk-all{width:15px;height:15px;accent-color:var(--g);cursor:pointer;vertical-align:middle;margin:0}
+#bulk-bar{position:fixed;left:0;right:0;bottom:0;z-index:900;background:linear-gradient(180deg,rgba(10,22,40,.97),rgba(5,13,26,.99));border-top:1px solid var(--g);box-shadow:0 -6px 24px rgba(0,255,136,.18);padding:10px 14px;display:none;align-items:center;gap:10px;backdrop-filter:blur(6px)}
+#bulk-bar.show{display:flex}
+#bulk-bar .cnt{color:var(--g);font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700}
+#bulk-bar .sp{flex:1}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--g);color:var(--g);font-size:11px;padding:8px 18px;border-radius:8px;z-index:1000;display:none}
 .toast.show{display:block}.toast.err{border-color:var(--r);color:var(--r)}
 .result-box{background:var(--bg);border:2px solid var(--g);border-radius:12px;padding:20px;text-align:center;margin-top:16px}
@@ -864,8 +869,8 @@ input:focus,select:focus{border-color:var(--g)}
       </div>
       <div class="card" style="padding:8px;overflow-x:auto">
         <table class="tbl" id="clients-table">
-          <thead><tr><th>No</th><th>Nama</th><th>Account ID</th><th>Lisensi</th><th>Ref</th><th>Status</th><th>Aksi</th></tr></thead>
-          <tbody id="clients-body"><tr><td colspan="7" style="text-align:center;color:var(--t3);padding:20px">Loading...</td></tr></tbody>
+          <thead><tr><th style="width:22px;text-align:center"><input type="checkbox" id="chk-all" onchange="toggleSelectAll(this)" title="Pilih semua"></th><th>No</th><th>Nama</th><th>Account ID</th><th>Lisensi</th><th>Ref</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody id="clients-body"><tr><td colspan="8" style="text-align:center;color:var(--t3);padding:20px">Loading...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -936,6 +941,14 @@ input:focus,select:focus{border-color:var(--g)}
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- Bar aksi: muncul saat ada ID dicentang -->
+<div id="bulk-bar">
+  <span class="cnt" id="bulk-cnt">0 ID terpilih</span>
+  <span class="sp"></span>
+  <button class="btn small" onclick="clearSelection()" style="background:transparent;border:1px solid var(--bd);color:var(--t2)">BATAL</button>
+  <button class="btn small" onclick="moveSelected()">PINDAHKAN TERPILIH</button>
+</div>
 </div>
 
 <!-- ==================== MODAL PINDAH GRUP ==================== -->
@@ -947,7 +960,7 @@ input:focus,select:focus{border-color:var(--g)}
     <div id="mv-list" style="margin-bottom:12px;max-height:38vh;overflow-y:auto"></div>
     <div class="ig"><div class="lbl"><span class="dot">&rsaquo;</span> Atau grup baru</div>
       <input type="text" id="mv-new" placeholder="Ketik nama grup baru"></div>
-    <button class="btn" onclick="doMoveClientGroup()">PINDAHKAN</button>
+    <button class="btn" id="mv-go" onclick="doMoveClientGroup()">PINDAHKAN</button>
     <div style="font-size:9px;color:var(--t3);margin-top:8px;line-height:1.5">Hanya mengubah pengelompokan (nama). Account ID, lisensi, &amp; masa aktif client tetap.</div>
   </div>
 </div>
@@ -1793,6 +1806,7 @@ function aTab(name) {
     document.getElementById('at-' + n).style.display = n === name ? 'block' : 'none';
   });
   if (name === 'a-testi') loadAdminTestimoni();
+  if (name === 'a-clients') { onSelChange(); } else { hideBulkBar(); }
 }
 
 // === Pengelompokan client berdasarkan NAMA (1 nama = banyak ID lisensi) ===
@@ -1807,7 +1821,7 @@ async function loadClients() {
   const entries = Object.entries(data).filter(([id, c]) => c && typeof c === 'object');
 
   if (entries.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--t3);padding:20px">Belum ada client</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--t3);padding:20px">Belum ada client</td></tr>';
     return;
   }
 
@@ -1832,8 +1846,9 @@ async function loadClients() {
     const expired = total - activeCount;
     const nameEsc = esc(name);
 
-    // Baris header grup — klik untuk buka/tutup
+    // Baris header grup — klik untuk buka/tutup; checkbox = pilih semua ID di grup
     html += `<tr class="grp-row" data-name="${nameEsc}" onclick="toggleGroup('${gid}', this)">
+      <td style="text-align:center" onclick="event.stopPropagation()"><input type="checkbox" class="grp-chk" data-gid="${gid}" onclick="event.stopPropagation()" onchange="toggleGroupSelect('${gid}', this)" title="Pilih semua di grup ini"></td>
       <td colspan="7">
         <span class="grp-caret">${collapsed ? '\u25B8' : '\u25BE'}</span>
         <span class="grp-name">${nameEsc}</span>
@@ -1842,7 +1857,7 @@ async function loadClients() {
       </td>
     </tr>`;
 
-    // Baris anggota (ID lisensi) — tombol lisensi tetap utuh
+    // Baris anggota (ID lisensi) — checkbox seleksi + tombol lisensi tetap utuh
     members.forEach(([accId, c]) => {
       const licEnd = c.license_end || '';
       const licStart = c.license_start || '';
@@ -1850,6 +1865,7 @@ async function loadClients() {
       const st = licStatus(licEnd);
       const stClass = st === 'active' ? 'lic-active' : 'lic-expired';
       html += `<tr data-group="${gid}"${collapsed ? ' style="display:none"' : ''}>
+        <td style="text-align:center"><input type="checkbox" class="sel-chk" data-acc="${accId}" data-gid="${gid}" onchange="onSelChange()"></td>
         <td>${c.no || '-'}</td>
         <td style="color:var(--t)">${esc(c.name || 'Unknown')}</td>
         <td>${accId}</td>
@@ -1893,17 +1909,61 @@ function setAllGroups(collapse) {
   saveGroupState();
 }
 
-// === Pindah ID ke grup lain (HANYA ubah nama; lisensi/ID/masa aktif TIDAK berubah) ===
-let _mvAcc = null, _mvTarget = null;
+// === SELEKSI MULTI-ID untuk pindah sekaligus ===
+function getSelectedAccs() {
+  return Array.from(document.querySelectorAll('#clients-body .sel-chk:checked')).map(c => c.getAttribute('data-acc'));
+}
 
-async function moveClientGroup(accId) {
+function onSelChange() {
+  const sel = getSelectedAccs();
+  const bar = document.getElementById('bulk-bar');
+  const cnt = document.getElementById('bulk-cnt');
+  if (cnt) cnt.textContent = sel.length + ' ID terpilih';
+  if (bar) bar.classList.toggle('show', sel.length > 0);
+
+  // Sinkron checkbox "pilih semua" tiap grup (termasuk state indeterminate)
+  document.querySelectorAll('#clients-body .grp-chk').forEach(gc => {
+    const gid = gc.getAttribute('data-gid');
+    const boxes = document.querySelectorAll('#clients-body .sel-chk[data-gid="' + gid + '"]');
+    const checked = Array.from(boxes).filter(b => b.checked).length;
+    gc.checked = boxes.length > 0 && checked === boxes.length;
+    gc.indeterminate = checked > 0 && checked < boxes.length;
+  });
+  // Sinkron master select-all
+  const master = document.getElementById('chk-all');
+  if (master) {
+    const all = document.querySelectorAll('#clients-body .sel-chk');
+    const c = Array.from(all).filter(b => b.checked).length;
+    master.checked = all.length > 0 && c === all.length;
+    master.indeterminate = c > 0 && c < all.length;
+  }
+}
+
+function toggleGroupSelect(gid, gc) {
+  document.querySelectorAll('#clients-body .sel-chk[data-gid="' + gid + '"]').forEach(b => { b.checked = gc.checked; });
+  onSelChange();
+}
+
+function toggleSelectAll(master) {
+  document.querySelectorAll('#clients-body .sel-chk').forEach(b => { b.checked = master.checked; });
+  onSelChange();
+}
+
+function clearSelection() {
+  document.querySelectorAll('#clients-body .sel-chk, #clients-body .grp-chk, #chk-all').forEach(b => { b.checked = false; b.indeterminate = false; });
+  const bar = document.getElementById('bulk-bar'); if (bar) bar.classList.remove('show');
+}
+
+function hideBulkBar() { const b = document.getElementById('bulk-bar'); if (b) b.classList.remove('show'); }
+
+// === Pindah grup (HANYA ubah nama; lisensi/Account ID/masa aktif TIDAK berubah) ===
+let _mvAccs = [], _mvTarget = null;
+
+// Buka modal pindah dgn daftar grup tujuan
+async function openMoveModal(accs, subtitleHtml) {
+  if (!accs.length) return;
+  _mvAccs = accs.slice(); _mvTarget = null;
   const data = await fbGet('clients') || {};
-  const c = data[accId];
-  if (!c) { toast('Client tidak ditemukan', true); return; }
-  _mvAcc = accId; _mvTarget = null;
-  const curName = ((c.name || 'Unknown').trim()) || 'Unknown';
-
-  // Hitung jumlah ID per grup yang ada
   const counts = {};
   Object.values(data).forEach(x => {
     if (!x || typeof x !== 'object') return;
@@ -1911,14 +1971,29 @@ async function moveClientGroup(accId) {
     counts[n] = (counts[n] || 0) + 1;
   });
   const names = Object.keys(counts).sort((a, b) => a.localeCompare(b));
-
-  document.getElementById('mv-sub').innerHTML =
-    'Pindahkan ID <b style="color:var(--t)">' + esc(accId) + '</b> (grup sekarang: <b style="color:var(--g)">' + esc(curName) + '</b>) ke:';
+  document.getElementById('mv-sub').innerHTML = subtitleHtml;
   document.getElementById('mv-list').innerHTML = names.map(n =>
     '<button class="mv-opt" data-name="' + esc(n) + '" onclick="pickMoveTarget(this)">' +
       esc(n) + ' <span class="c">' + counts[n] + ' ID</span></button>').join('');
   document.getElementById('mv-new').value = '';
   document.getElementById('move-modal').classList.add('show');
+}
+
+// Pindah 1 ID (tombol ⇄ GRUP per baris)
+async function moveClientGroup(accId) {
+  const data = await fbGet('clients') || {};
+  const c = data[accId];
+  if (!c) { toast('Client tidak ditemukan', true); return; }
+  const curName = ((c.name || 'Unknown').trim()) || 'Unknown';
+  await openMoveModal([accId],
+    'Pindahkan ID <b style="color:var(--t)">' + esc(accId) + '</b> (grup sekarang: <b style="color:var(--g)">' + esc(curName) + '</b>) ke:');
+}
+
+// Pindah banyak ID terpilih sekaligus (tombol di bar bawah)
+async function moveSelected() {
+  const accs = getSelectedAccs();
+  if (!accs.length) { toast('Centang dulu ID yang mau dipindah', true); return; }
+  await openMoveModal(accs, 'Pindahkan <b style="color:var(--g)">' + accs.length + ' ID</b> terpilih ke grup:');
 }
 
 function pickMoveTarget(btn) {
@@ -1930,24 +2005,30 @@ function pickMoveTarget(btn) {
 }
 
 async function doMoveClientGroup() {
-  if (!_mvAcc) return;
+  if (!_mvAccs.length) return;
   const typed = (document.getElementById('mv-new').value || '').trim();
   const target = typed || _mvTarget;
   if (!target) { toast('Pilih grup atau ketik nama grup baru', true); return; }
-  if (!confirm('Pindahkan ID ' + _mvAcc + ' ke grup "' + target + '"?\nLisensi, Account ID & masa aktif TIDAK berubah.')) return;
-  try {
-    await fbUpdate('clients/' + _mvAcc, { name: target });  // hanya kolom nama (pengelompokan)
-    toast('ID ' + _mvAcc + ' dipindah ke grup "' + target + '"');
-    closeMoveModal();
-    setTimeout(loadClients, 350);
-  } catch (e) {
-    toast('Gagal pindah grup: ' + e.message, true);
+  if (!confirm('Pindahkan ' + _mvAccs.length + ' ID ke grup "' + target + '"?\nLisensi, Account ID & masa aktif TIDAK berubah.')) return;
+
+  const btn = document.getElementById('mv-go');
+  if (btn) { btn.disabled = true; btn.textContent = 'MEMINDAHKAN...'; }
+  let ok = 0, fail = 0;
+  for (const acc of _mvAccs) {
+    try { await fbUpdate('clients/' + acc, { name: target }); ok++; }  // hanya kolom nama
+    catch (e) { fail++; }
   }
+  if (btn) { btn.disabled = false; btn.textContent = 'PINDAHKAN'; }
+
+  toast(ok + ' ID dipindah ke "' + target + '"' + (fail ? ' \u00B7 ' + fail + ' gagal' : ''), fail > 0);
+  closeMoveModal();
+  clearSelection();
+  setTimeout(loadClients, 350);
 }
 
 function closeMoveModal() {
   document.getElementById('move-modal').classList.remove('show');
-  _mvAcc = null; _mvTarget = null;
+  _mvAccs = []; _mvTarget = null;
 }
 
 async function extendLicense(accId) {
