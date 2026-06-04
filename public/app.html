@@ -921,6 +921,17 @@ body.mod-mode .admin-only{display:none!important}
         </div>
         <div style="font-size:9px;color:var(--t3);margin-top:6px">Angka ini ditampilkan di halaman pembelian paket Lifetime.</div>
       </div>
+      <div class="card admin-only">
+        <div class="title" style="color:var(--b)">AKUN MODERATOR</div>
+        <div style="font-size:9px;color:var(--t3);margin-bottom:8px">Atur username &amp; password login moderator. Perubahan langsung berlaku (tersimpan di server). Kosongkan password jika hanya ingin ganti username.</div>
+        <div class="ig"><div class="lbl"><span class="dot">›</span> Username login</div>
+          <input type="text" id="mod-username" placeholder="moderator" autocomplete="off"></div>
+        <div class="ig"><div class="lbl"><span class="dot">›</span> Password baru</div>
+          <input type="text" id="mod-newpwd" placeholder="Kosongkan = tidak diubah" autocomplete="off"></div>
+        <button class="btn" onclick="saveModeratorAuth()">SIMPAN AKUN MODERATOR</button>
+        <div class="ok" id="mod-auth-ok"></div>
+        <div class="err" id="mod-auth-err"></div>
+      </div>
     </div>
 
     <!-- TESTIMONI MANAGEMENT -->
@@ -1047,7 +1058,7 @@ function generateLicenseHash(accountId, licenseEnd) {
 // lalu salin hasilnya ke konstanta di bawah. (Harus diakses via HTTPS/localhost.)
 const AUTH_SALT = 'LP@Algo#Auth$2025!';
 const ADMIN_PWD_HASH = '7bee9a2462df5ddc5419880d5724c09012c15a36f07cd9b145dc4414903b426a';      // password admin
-const MODERATOR_PWD_HASH = 'c0a17ca1aa1d75f810d5a7db712caf5107308fc7481499d03fd929ae68122b74';  // password moderator (ID login: 'moderator')
+const MODERATOR_PWD_HASH = '7365b0e296b352f0cdc3ba57ce119bde8347fce9a1571f0485b77fb8deb854ea';  // password moderator (ID login: 'moderator')
 async function sha256Hex(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
@@ -1396,23 +1407,29 @@ async function doLogin() {
   if (!acc || !pwd) { showErr('l-err', 'Isi Account ID dan Password'); return; }
 
   // === Login STAFF (admin / moderator) — password dibandingkan sebagai hash SHA-256 ===
-  if (acc === 'admin' || acc === 'moderator') {
-    let pwdHash = '';
-    try { pwdHash = await sha256Hex(AUTH_SALT + pwd); }
-    catch (e) { showErr('l-err', 'Verifikasi aman gagal (panel harus diakses via HTTPS)'); return; }
+  // Username & password moderator dapat diubah admin (tersimpan di Supabase); default 'moderator'.
+  {
+    const modCfg = await getModeratorConfig();
+    const isAdminAcc = (acc === 'admin');
+    const isModAcc = (acc === modCfg.username);
+    if (isAdminAcc || isModAcc) {
+      let pwdHash = '';
+      try { pwdHash = await sha256Hex(AUTH_SALT + pwd); }
+      catch (e) { showErr('l-err', 'Verifikasi aman gagal (panel harus diakses via HTTPS)'); return; }
 
-    if (acc === 'admin' && pwdHash === ADMIN_PWD_HASH) {
-      currentUser = { account_id: 'admin', name: 'Administrator', role: 'admin' };
-      showPage('pg-admin'); applyRoleUI(); loadClients(); startAdminSSE();
+      if (isAdminAcc && pwdHash === ADMIN_PWD_HASH) {
+        currentUser = { account_id: 'admin', name: 'Administrator', role: 'admin' };
+        showPage('pg-admin'); applyRoleUI(); loadClients(); startAdminSSE();
+        return;
+      }
+      if (isModAcc && pwdHash === modCfg.pwd_hash) {
+        currentUser = { account_id: modCfg.username, name: 'Moderator', role: 'moderator' };
+        showPage('pg-admin'); applyRoleUI(); loadClients(); startAdminSSE();
+        return;
+      }
+      showErr('l-err', 'Password salah');   // jangan teruskan ID staff ke lookup client
       return;
     }
-    if (acc === 'moderator' && pwdHash === MODERATOR_PWD_HASH) {
-      currentUser = { account_id: 'moderator', name: 'Moderator', role: 'moderator' };
-      showPage('pg-admin'); applyRoleUI(); loadClients(); startAdminSSE();
-      return;
-    }
-    showErr('l-err', 'Password salah');   // jangan teruskan ID staff ke lookup client
-    return;
   }
 
   try {
@@ -1859,6 +1876,8 @@ function applyRoleUI(){
     const at = document.querySelector('#pg-admin .tabs .tab.on');
     const t = at ? at.getAttribute('data-t') : '';
     if (t === 'a-regcode' || t === 'a-testi') aTab('a-add');
+  } else {
+    loadModeratorAuth();   // tampilkan username moderator saat ini di form
   }
 }
 
@@ -2092,6 +2111,67 @@ async function viewPassword(accId) {
     prompt('Password login client ' + accId + ' (salin):', c.password || '(tidak ada)');
   } catch (e) {
     toast('Gagal ambil password: ' + e.message, true);
+  }
+}
+
+// === Kelola akun login MODERATOR (admin only) — tersimpan di Supabase ===
+// Disimpan sebagai 1 key JSON: settings/moderator_auth = {"u":username,"h":hashSHA256}
+async function getModeratorConfig() {
+  try {
+    const raw = await fbGet('settings/moderator_auth');
+    if (raw) {
+      const o = (typeof raw === 'string') ? JSON.parse(raw) : raw;
+      if (o && o.u && o.h) return { username: String(o.u), pwd_hash: String(o.h) };
+    }
+  } catch (e) {}
+  return { username: 'moderator', pwd_hash: MODERATOR_PWD_HASH };  // default bawaan dari source
+}
+
+// Isi field username moderator saat ini (dipanggil untuk admin)
+async function loadModeratorAuth() {
+  try {
+    const cfg = await getModeratorConfig();
+    const u = document.getElementById('mod-username');
+    if (u && !u.value) u.value = cfg.username;
+  } catch (e) {}
+}
+
+async function saveModeratorAuth() {
+  if (!isAdminRole()) { toast('Hanya admin yang bisa mengubah akun moderator', true); return; }
+  const okEl = 'mod-auth-ok', errEl = 'mod-auth-err';
+  document.getElementById(okEl).textContent = '';
+  document.getElementById(errEl).textContent = '';
+  const username = (document.getElementById('mod-username').value || '').trim();
+  const newpwd = (document.getElementById('mod-newpwd').value || '').trim();
+
+  if (!username) { showErr(errEl, 'Username tidak boleh kosong'); return; }
+  if (username.toLowerCase() === 'admin') { showErr(errEl, "Username tidak boleh 'admin'"); return; }
+  if (username.length < 3) { showErr(errEl, 'Username minimal 3 karakter'); return; }
+  if (newpwd && newpwd.length < 6) { showErr(errEl, 'Password baru minimal 6 karakter'); return; }
+
+  try {
+    // Hindari bentrok dengan Account ID client (login akan saling rebut)
+    const clash = await fbGet('clients/' + username);
+    if (clash) { showErr(errEl, 'Username bentrok dengan Account ID client. Pilih username lain.'); return; }
+
+    const cur = await getModeratorConfig();
+    let hash = cur.pwd_hash;                                   // pertahankan password lama jika dikosongkan
+    if (newpwd) hash = await sha256Hex(AUTH_SALT + newpwd);    // hash password baru
+
+    await fbSet('settings/moderator_auth', JSON.stringify({ u: username, h: hash }));
+
+    // Verifikasi tersimpan (anti gagal-diam)
+    const check = await getModeratorConfig();
+    if (check.username !== username || check.pwd_hash !== hash) {
+      showErr(errEl, 'Gagal menyimpan ke server. Cek koneksi / policy Supabase.');
+      return;
+    }
+    showOk(okEl, newpwd
+      ? ('Tersimpan ✓  Login moderator sekarang: username "' + username + '" + password baru.')
+      : ('Username moderator diperbarui ✓  Login: "' + username + '" (password tetap).'));
+    document.getElementById('mod-newpwd').value = '';
+  } catch (e) {
+    showErr(errEl, 'Gagal: ' + e.message);
   }
 }
 
