@@ -81,7 +81,6 @@ input:focus,select:focus{border-color:var(--g)}
 #bulk-bar .sp{flex:1}
 body.mod-mode .admin-only{display:none!important}
 .mod-tag{display:inline-block;background:rgba(255,170,0,.12);border:1px solid var(--go);color:var(--go);font-size:7px;font-weight:700;letter-spacing:.5px;padding:0 5px;border-radius:8px;margin-left:5px;vertical-align:middle}
-#mod-note{display:none;background:rgba(0,170,255,.08);border:1px solid var(--b);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:10px;color:var(--t2);line-height:1.5}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--g);color:var(--g);font-size:11px;padding:8px 18px;border-radius:8px;z-index:1000;display:none}
 .toast.show{display:block}.toast.err{border-color:var(--r);color:var(--r)}
 .result-box{background:var(--bg);border:2px solid var(--g);border-radius:12px;padding:20px;text-align:center;margin-top:16px}
@@ -825,7 +824,6 @@ body.mod-mode .admin-only{display:none!important}
   <div style="padding:12px 16px 0">
     <div id="admin-sub-title" style="font-family:'Orbitron',sans-serif;font-size:16px;color:var(--go);font-weight:700">Admin Panel</div>
     <div style="font-size:10px;color:var(--t2);margin-bottom:12px">Kelola client, lisensi, dan kode registrasi</div>
-    <div id="mod-note">Mode <b style="color:var(--b)">MODERATOR</b>: Anda hanya bisa <b>menambah client</b>. Edit / hapus / perpanjang lisensi, pindah grup, dan melihat password hanya untuk Admin. Client yang Anda tambahkan langsung aktif &amp; diberi label di panel Admin.</div>
 
     <!-- P&L Summary -->
     <div class="card admin-only" style="border-color:var(--b);margin-bottom:14px">
@@ -1869,8 +1867,6 @@ function applyRoleUI(){
   if (rb) { rb.textContent = isAdmin ? 'ADMIN' : 'MODERATOR'; rb.style.color = isAdmin ? 'var(--go)' : 'var(--b)'; }
   const sub = document.getElementById('admin-sub-title');
   if (sub) sub.textContent = isAdmin ? 'Admin Panel' : 'Moderator Panel';
-  const note = document.getElementById('mod-note');
-  if (note) note.style.display = isAdmin ? 'none' : 'block';
   // Moderator tidak boleh berada di tab yang disembunyikan
   if (!isAdmin) {
     const at = document.querySelector('#pg-admin .tabs .tab.on');
