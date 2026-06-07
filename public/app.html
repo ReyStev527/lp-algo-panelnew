@@ -273,7 +273,7 @@ body.mod-mode .admin-only{display:none!important}
       <div class="lp-feat"><div class="lp-feat-icon" style="background:rgba(0,255,136,.08);color:var(--g)">&#9878;</div><div><div style="font-size:11px;font-weight:700;color:var(--t)">Lot & Grid Fleksibel</div><div style="font-size:10px;color:var(--t2)">Sesuaikan ukuran lot dan jarak entry sesuai modal</div></div></div>
       <div class="lp-feat"><div class="lp-feat-icon" style="background:rgba(255,51,102,.08);color:var(--r)">&#9888;</div><div><div style="font-size:11px;font-weight:700;color:var(--t)">Cut Loss Otomatis</div><div style="font-size:10px;color:var(--t2)">Batasan kerugian dalam dollar, tidak akan lebih dari yang Anda tentukan</div></div></div>
       <div class="lp-feat"><div class="lp-feat-icon" style="background:rgba(0,170,255,.08);color:var(--b)">&#10004;</div><div><div style="font-size:11px;font-weight:700;color:var(--t)">Lock Money Trailing</div><div style="font-size:10px;color:var(--t2)">Profit dikunci per zona dan di-trailing otomatis</div></div></div>
-      <div class="lp-feat"><div class="lp-feat-icon" style="background:rgba(255,170,0,.08);color:var(--go)">&#128225;</div><div><div style="font-size:11px;font-weight:700;color:var(--t)">News Filter</div><div style="font-size:10px;color:var(--t2)">Otomatis stop saat NFP, CPI, FOMC dan high-impact news</div></div></div>
+      <div class="lp-feat"><div class="lp-feat-icon" style="background:rgba(255,170,0,.08);color:var(--go)">&#128225;</div><div><div style="font-size:11px;font-weight:700;color:var(--t)">Filter berita HIGH (USD)</div><div style="font-size:10px;color:var(--t2)">Otomatis stop saat NFP, CPI, FOMC dan high-impact news</div></div></div>
       <div class="lp-feat"><div class="lp-feat-icon" style="background:rgba(0,255,136,.08);color:var(--g)">&#128241;</div><div><div style="font-size:11px;font-weight:700;color:var(--t)">Remote Control dari HP</div><div style="font-size:10px;color:var(--t2)">ON/OFF EA, ubah settings, lihat profit — dari mana saja</div></div></div>
       <div class="lp-feat"><div class="lp-feat-icon" style="background:rgba(0,170,255,.08);color:var(--b)">&#8634;</div><div><div style="font-size:11px;font-weight:700;color:var(--t)">Auto Restart</div><div style="font-size:10px;color:var(--t2)">EA aktif kembali otomatis setelah kondisi aman</div></div></div>
     </div>
@@ -703,9 +703,10 @@ body.mod-mode .admin-only{display:none!important}
     <!-- SETTINGS -->
     <div id="dt-settings" style="display:none">
       <div class="card">
-        <div class="title">SETTING REKOMENDASI</div>
+        <div class="title">PRESET MODAL</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Pakai Preset (ON=otomatis, OFF=manual)</span><select id="st-usepreset" onchange="onPresetMode()" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
         <div style="padding:12px 0;text-align:center">
-          <div style="font-size:11px;color:var(--t2);margin-bottom:10px">Pilih sesuai modal Anda:</div>
+          <div style="font-size:11px;color:var(--t2);margin-bottom:10px">[Preset ON] Pilih sesuai modal akun:</div>
           <div style="display:flex;gap:8px;justify-content:center">
             <button class="btn preset-btn" id="pb-100" onclick="applyPreset(100)" style="flex:1;padding:14px 0;font-size:13px;border:2px solid var(--bd);border-radius:10px;background:transparent;color:var(--t);cursor:pointer;transition:all .2s">
               <div style="font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;color:var(--g)">$100</div>
@@ -728,29 +729,29 @@ body.mod-mode .admin-only{display:none!important}
       <!-- Param manual (override preset). Diisi otomatis dari EA saat load; ubah untuk override. -->
       <div class="card"><div class="title">LOT &amp; RISIKO</div>
         <div style="padding:4px 0 8px;font-size:10px;color:var(--t3);line-height:1.5">Nilai terisi otomatis dari EA. Ubah manual = override preset.</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Main Lot</span><input type="number" id="st-ml" step="0.01" min="0.01" value="0.01" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S2 RSI Lot</span><input type="number" id="st-rl" step="0.01" min="0.01" value="0.01" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">RSI Lot Skip</span><input type="number" id="st-rls" step="1" min="0" value="3" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Cut Loss DD (% equity, 0=off)</span><input type="number" id="st-cl" step="1" min="0" value="0" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Lot awal entry utama</span><input type="number" id="st-ml" step="0.01" min="0.01" value="0.01" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Lot S2 entry</span><input type="number" id="st-rl" step="0.01" min="0.01" value="0.01" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Tiap N entry, lot dilewati 1x</span><input type="number" id="st-rls" step="1" min="0" value="3" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Cut loss DD dari modal (% equity, 0=off)</span><input type="number" id="st-cl" step="1" min="0" value="0" style="width:75px;text-align:right"></div>
       </div>
       <div class="card"><div class="title">GRID &amp; ENTRY</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Grid Pips</span><input type="number" id="st-gp" step="0.1" min="0" value="5.5" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Entry per Step</span><input type="number" id="st-eps" step="1" min="1" value="5" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Max Entry / arah</span><input type="number" id="st-rm" step="1" min="1" value="60" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Jarak grid antar entry (pips)</span><input type="number" id="st-gp" step="0.1" min="0" value="5.5" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Entry per step (lot naik 1 tingkat)</span><input type="number" id="st-eps" step="1" min="1" value="5" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Batas max entry per arah</span><input type="number" id="st-rm" step="1" min="1" value="60" style="width:75px;text-align:right"></div>
       </div>
       <div class="card"><div class="title">TRAILING SL</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Trailing SL (pips)</span><input type="number" id="st-tslp" step="0.1" min="0" value="6.0" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Jarak Trailing SL (pips)</span><input type="number" id="st-tslp" step="0.1" min="0" value="6.0" style="width:75px;text-align:right"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Min Profit Trailing ($)</span><input type="number" id="st-tslm" step="0.01" min="0" value="0.7" style="width:75px;text-align:right"></div>
       </div>
       <!-- legacy, tidak dipakai -->
       <div style="display:none"><input type="number" id="st-s4on" value="0"></div>
       <div class="card"><div class="title">NEWS FILTER</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">News Filter</span><select id="st-nf" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Stop Sebelum (menit)</span><input type="number" id="st-nb" step="1" min="0" value="60" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Stop Sesudah (menit)</span><input type="number" id="st-na" step="1" min="0" value="1" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Gold Keyword Filter</span><select id="st-gkf" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Gold Before (menit)</span><input type="number" id="st-gb" step="1" min="0" value="60" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Gold After (menit)</span><input type="number" id="st-ga" step="1" min="0" value="1" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Filter berita HIGH (USD)</span><select id="st-nf" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Stop X menit SEBELUM news HIGH</span><input type="number" id="st-nb" step="1" min="0" value="60" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Stop X menit SESUDAH news HIGH</span><input type="number" id="st-na" step="1" min="0" value="1" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Blokir berita Gold-mover</span><select id="st-gkf" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Stop X menit SEBELUM Gold-news</span><input type="number" id="st-gb" step="1" min="0" value="60" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Stop X menit SESUDAH Gold-news</span><input type="number" id="st-ga" step="1" min="0" value="1" style="width:75px;text-align:right"></div>
       </div>
       <div class="card"><div class="title">SLEEP CYCLE STATUS</div>
         <div style="padding:6px 0;font-size:10px;color:var(--t3);line-height:1.5">EA otomatis cycle aktif → tunggu trailing → sleep → aktif lagi (random per-client). Tidak perlu setting manual.</div>
@@ -1702,6 +1703,9 @@ async function fetchStatus() {
       document.getElementById('st-rls').value  = _s.rsi_lot_skip != null ? _s.rsi_lot_skip : 3;
       document.getElementById('st-tslp').value = _s.trail_sl_pips != null ? _s.trail_sl_pips : 6.0;
       document.getElementById('st-tslm').value = _s.trail_sl_min_profit != null ? _s.trail_sl_min_profit : 0.7;
+      // Toggle Pakai Preset — cerminkan mode efektif EA
+      if (_s.use_preset != null) document.getElementById('st-usepreset').value = String(_s.use_preset);
+      onPresetMode();
       // Modal preset — restore highlight on settings tab
       if (data.settings.modal_preset != null) {
         const preset = data.settings.modal_preset;
@@ -1811,8 +1815,9 @@ function applyPreset(modal) {
   if (!p) return;
   
   g_currentPresetId = p.id;
+  document.getElementById('st-usepreset').value = '1';  // tap preset => mode Preset ON
   
-  // Set hidden input values (untuk fallback ke saveSettings)
+  // Isi field preset-driven dgn nilai preset (tampilan; dikirim -1 saat ON)
   document.getElementById('st-tslm').value = p.tslm;
   document.getElementById('st-gp').value = p.gp;
   document.getElementById('st-eps').value = p.eps;
@@ -1832,7 +1837,20 @@ function applyPreset(modal) {
   document.getElementById('preset-name').textContent = p.name;
   
   // Auto save to Supabase
+  onPresetMode();
   saveSettings();
+}
+
+// Toggle Pakai Preset: ON => field preset-driven dikunci (ikut preset), OFF => isi manual
+function onPresetMode() {
+  const on = document.getElementById('st-usepreset').value === '1';
+  ['st-gp','st-eps','st-rl','st-tslm'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.disabled = on;
+    el.style.opacity = on ? '0.45' : '1';
+  });
+  document.querySelectorAll('.preset-btn').forEach(b => { b.style.opacity = on ? '1' : '0.45'; });
 }
 
 // Ambil angka dari field; kosong/invalid => -1 (EA abaikan, pakai preset/default)
@@ -1840,18 +1858,21 @@ function _numOv(id){ const v = parseFloat(document.getElementById(id).value); re
 function _intOv(id){ const v = parseInt(document.getElementById(id).value); return isNaN(v) ? -1 : v; }
 
 async function saveSettings() {
+  const usePreset = parseInt(document.getElementById('st-usepreset').value);  // 1=preset, 0=manual
   const settings = {
     command: 'UPDATE_SETTINGS',
+    use_preset: usePreset,                                 // ON/OFF preset (mirror InpUsePreset EA)
     modal_preset: g_currentPresetId,                       // 0=$100, 1=$200, 2=$300+ — EA panggil ApplyModalPreset()
-    main_lot:            _numOv('st-ml'),                  // override > preset/default
+    main_lot:            _numOv('st-ml'),                  // selalu aktif
     cut_loss:            _numOv('st-cl'),                  // 0 = nonaktif
-    grid_pips:           _numOv('st-gp'),                  // override > preset
-    entry_per_step:      _intOv('st-eps'),                 // override > preset
-    rsi_lot:             _numOv('st-rl'),                  // override > preset
+    // 4 field di bawah preset-driven: ON => -1 (ikut preset), OFF => nilai manual
+    grid_pips:           usePreset ? -1 : _numOv('st-gp'),
+    entry_per_step:      usePreset ? -1 : _intOv('st-eps'),
+    rsi_lot:             usePreset ? -1 : _numOv('st-rl'),
+    trail_sl_min_profit: usePreset ? -1 : _numOv('st-tslm'),
     rsi_max_entry:       _intOv('st-rm'),
     rsi_lot_skip:        _intOv('st-rls'),
     trail_sl_pips:       _numOv('st-tslp'),
-    trail_sl_min_profit: _numOv('st-tslm'),                // override > preset
     news_filter: parseInt(document.getElementById('st-nf').value),
     news_before: parseInt(document.getElementById('st-nb').value) || 60,
     news_after: parseInt(document.getElementById('st-na').value) || 1,
