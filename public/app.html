@@ -728,7 +728,7 @@ body.mod-mode .admin-only{display:none!important}
       <!-- Param manual (override preset). Diisi otomatis dari EA saat load; ubah untuk override. -->
       <div class="card"><div class="title">LOT &amp; RISIKO</div>
         <div style="padding:4px 0 8px;font-size:10px;color:var(--t3);line-height:1.5">Nilai terisi otomatis dari EA. Ubah manual = override preset.</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Main Lot</span><input type="number" id="st-ml" step="0.01" min="0.01" value="0.02" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Main Lot</span><input type="number" id="st-ml" step="0.01" min="0.01" value="0.01" style="width:75px;text-align:right"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">S2 RSI Lot</span><input type="number" id="st-rl" step="0.01" min="0.01" value="0.01" style="width:75px;text-align:right"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">RSI Lot Skip</span><input type="number" id="st-rls" step="1" min="0" value="3" style="width:75px;text-align:right"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Cut Loss DD (% equity, 0=off)</span><input type="number" id="st-cl" step="1" min="0" value="0" style="width:75px;text-align:right"></div>
@@ -739,18 +739,18 @@ body.mod-mode .admin-only{display:none!important}
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Max Entry / arah</span><input type="number" id="st-rm" step="1" min="1" value="60" style="width:75px;text-align:right"></div>
       </div>
       <div class="card"><div class="title">TRAILING SL</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Trailing SL (pips)</span><input type="number" id="st-tslp" step="0.1" min="0" value="10.0" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Trailing SL (pips)</span><input type="number" id="st-tslp" step="0.1" min="0" value="6.0" style="width:75px;text-align:right"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Min Profit Trailing ($)</span><input type="number" id="st-tslm" step="0.01" min="0" value="0.7" style="width:75px;text-align:right"></div>
       </div>
       <!-- legacy, tidak dipakai -->
       <div style="display:none"><input type="number" id="st-s4on" value="0"></div>
       <div class="card"><div class="title">NEWS FILTER</div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">News Filter</span><select id="st-nf" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Stop Sebelum (menit)</span><input type="number" id="st-nb" step="1" min="0" value="15" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Stop Sesudah (menit)</span><input type="number" id="st-na" step="1" min="0" value="15" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Stop Sebelum (menit)</span><input type="number" id="st-nb" step="1" min="0" value="60" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Stop Sesudah (menit)</span><input type="number" id="st-na" step="1" min="0" value="1" style="width:75px;text-align:right"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Gold Keyword Filter</span><select id="st-gkf" style="width:75px;text-align:right;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:5px;color:var(--t);font-family:inherit"><option value="1">ON</option><option value="0">OFF</option></select></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Gold Before (menit)</span><input type="number" id="st-gb" step="1" min="0" value="10" style="width:75px;text-align:right"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Gold After (menit)</span><input type="number" id="st-ga" step="1" min="0" value="10" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,45,61,.5)"><span style="font-size:11px;color:var(--t2)">Gold Before (menit)</span><input type="number" id="st-gb" step="1" min="0" value="60" style="width:75px;text-align:right"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11px;color:var(--t2)">Gold After (menit)</span><input type="number" id="st-ga" step="1" min="0" value="1" style="width:75px;text-align:right"></div>
       </div>
       <div class="card"><div class="title">SLEEP CYCLE STATUS</div>
         <div style="padding:6px 0;font-size:10px;color:var(--t3);line-height:1.5">EA otomatis cycle aktif → tunggu trailing → sleep → aktif lagi (random per-client). Tidak perlu setting manual.</div>
@@ -1683,24 +1683,24 @@ async function fetchStatus() {
     if (data.settings && document.getElementById('dt-settings').style.display === 'none') {
       // News filter group (visible)
       document.getElementById('st-nf').value = data.settings.news_filter !== undefined ? data.settings.news_filter : 1;
-      document.getElementById('st-nb').value = data.settings.news_before || 15;
-      document.getElementById('st-na').value = data.settings.news_after || 15;
+      document.getElementById('st-nb').value = data.settings.news_before || 60;
+      document.getElementById('st-na').value = data.settings.news_after || 1;
       document.getElementById('st-gkf').value = data.settings.gold_keyword_filter != null ? data.settings.gold_keyword_filter : 1;
-      document.getElementById('st-gb').value = data.settings.gold_before || 10;
-      document.getElementById('st-ga').value = data.settings.gold_after || 10;
+      document.getElementById('st-gb').value = data.settings.gold_before || 60;
+      document.getElementById('st-ga').value = data.settings.gold_after || 1;
       // EA hours (visible)
       document.getElementById('st-offh').value = data.settings.ea_off_hour || 0;
       document.getElementById('st-onh').value = data.settings.ea_on_hour || 0;
       // Param manual (Lot/Risiko/Grid/Entry/Trailing) — cerminkan nilai efektif EA
       const _s = data.settings;
-      document.getElementById('st-ml').value   = _s.main_lot != null ? _s.main_lot : 0.02;
+      document.getElementById('st-ml').value   = _s.main_lot != null ? _s.main_lot : 0.01;
       document.getElementById('st-cl').value   = _s.cut_loss != null ? _s.cut_loss : 0;
       document.getElementById('st-gp').value   = _s.grid_pips != null ? _s.grid_pips : 5.5;
       document.getElementById('st-eps').value  = _s.entry_per_step != null ? _s.entry_per_step : 5;
       document.getElementById('st-rl').value   = _s.rsi_lot != null ? _s.rsi_lot : 0.01;
       document.getElementById('st-rm').value   = _s.rsi_max_entry != null ? _s.rsi_max_entry : 60;
       document.getElementById('st-rls').value  = _s.rsi_lot_skip != null ? _s.rsi_lot_skip : 3;
-      document.getElementById('st-tslp').value = _s.trail_sl_pips != null ? _s.trail_sl_pips : 10.0;
+      document.getElementById('st-tslp').value = _s.trail_sl_pips != null ? _s.trail_sl_pips : 6.0;
       document.getElementById('st-tslm').value = _s.trail_sl_min_profit != null ? _s.trail_sl_min_profit : 0.7;
       // Modal preset — restore highlight on settings tab
       if (data.settings.modal_preset != null) {
@@ -1853,11 +1853,11 @@ async function saveSettings() {
     trail_sl_pips:       _numOv('st-tslp'),
     trail_sl_min_profit: _numOv('st-tslm'),                // override > preset
     news_filter: parseInt(document.getElementById('st-nf').value),
-    news_before: parseInt(document.getElementById('st-nb').value) || 15,
-    news_after: parseInt(document.getElementById('st-na').value) || 15,
+    news_before: parseInt(document.getElementById('st-nb').value) || 60,
+    news_after: parseInt(document.getElementById('st-na').value) || 1,
     gold_keyword_filter: parseInt(document.getElementById('st-gkf').value),
-    gold_before: parseInt(document.getElementById('st-gb').value) || 10,
-    gold_after: parseInt(document.getElementById('st-ga').value) || 10,
+    gold_before: parseInt(document.getElementById('st-gb').value) || 60,
+    gold_after: parseInt(document.getElementById('st-ga').value) || 1,
     ea_off_hour: parseInt(document.getElementById('st-offh').value) || 0,
     ea_on_hour: parseInt(document.getElementById('st-onh').value) || 0,
     time: Date.now()
